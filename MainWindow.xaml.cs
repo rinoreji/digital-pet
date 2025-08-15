@@ -16,23 +16,14 @@ namespace DigitalPetApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        // --- Configurable constants ---
-        private const string SpriteSheetPath = "pack://application:,,,/Assets/rover/map.png";
-        private const int SpriteFrameWidth = 80;
-        private const int SpriteFrameHeight = 80;
-        private const int WindowWidth = 100;
-        private const int WindowHeight = 100;
-        private const bool WindowTopmost = true;
-        private const bool WindowShowInTaskbar = true;
-        private const ResizeMode WindowResizeMode = ResizeMode.NoResize;
-    // Animation loader for agent.json
-        private static string GetAgentJsonPath()
-        {
-            var exeDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            return System.IO.Path.Combine(exeDir ?? "", "Assets", "rover", "agent.json");
-        }
-    private static readonly string AnimationName = "Acknowledge";
-    private readonly List<(int x, int y, int duration, string? sound)> frames;
+    // --- UI Configurable constants ---
+    private const int WindowWidth = 100;
+    private const int WindowHeight = 100;
+    private const bool WindowTopmost = true;
+    private const bool WindowShowInTaskbar = true;
+    private const ResizeMode WindowResizeMode = ResizeMode.NoResize;
+    private readonly AgentAnimationLoader animationLoader;
+    private readonly RoverSoundLoader soundLoader;
 
         public MainWindow()
         {
@@ -48,34 +39,33 @@ namespace DigitalPetApp
             this.Left = desktopWorkingArea.Right - this.Width;
             this.Top = desktopWorkingArea.Bottom - this.Height;
 
-            // Load animation frames from agent.json
-            var loader = new AgentAnimationLoader(GetAgentJsonPath());
-            frames = loader.GetFrames(AnimationName);
-            if (frames == null || frames.Count == 0)
-            {
-                MessageBox.Show($"Animation '{AnimationName}' not found in agent.json.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                frames = new List<(int x, int y, int duration, string? sound)> { (0, 0, 100, null) };
-            }
+            // Initialize animation and sound loaders
+            var exeDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            var agentJsonPath = System.IO.Path.Combine(exeDir ?? "", "Assets", "rover", "agent.json");
+            var soundJsonPath = System.IO.Path.Combine(exeDir ?? "", "Assets", "rover", "sounds-mp3.json");
+            animationLoader = new AgentAnimationLoader(agentJsonPath);
+            soundLoader = new RoverSoundLoader(soundJsonPath);
 
-            int frameWidth = SpriteFrameWidth;
-            int frameHeight = SpriteFrameHeight;
-            int currentFrame = 0;
-            var spriteUri = new System.Uri(SpriteSheetPath, System.UriKind.Absolute);
-            var spriteBitmap = new BitmapImage(spriteUri);
+            // Initialize AnimationHelper with one-time parameters
+            AnimationHelper.Init(
+                animationLoader,
+                soundLoader,
+                DogImage,
+                "pack://application:,,,/Assets/rover/map.png",
+                80, // frame width
+                80  // frame height
+            );
 
-            var timer = new System.Windows.Threading.DispatcherTimer();
-            timer.Interval = System.TimeSpan.FromMilliseconds(frames[0].duration);
-            timer.Tick += (s2, e2) =>
-            {
-                var (x, y, duration, sound) = frames[currentFrame];
-                var rect = new Int32Rect(x, y, frameWidth, frameHeight);
-                var cropped = new CroppedBitmap(spriteBitmap, rect);
-                DogImage.Source = cropped;
-                // Optionally: play sound here using 'sound' if not null
-                currentFrame = (currentFrame + 1) % frames.Count;
-                timer.Interval = System.TimeSpan.FromMilliseconds(frames[currentFrame].duration);
-            };
-            timer.Start();
+            // Play default animation on startup (UI only)
+            PlayDefaultAnimation();
+        }
+
+        private void PlayDefaultAnimation()
+        {
+            // Example: Play a single animation (can be replaced with user action)
+            AnimationHelper.PlayAnimationSequence(
+                new List<Gestures> { Gestures.Pleased, Gestures.Congratulate }
+            );
         }
 
         private void ExitMenuItem_Click(object sender, RoutedEventArgs e)

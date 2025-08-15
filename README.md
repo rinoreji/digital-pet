@@ -1,22 +1,30 @@
+## 🔖 Tagline
+**Reimagining Rover — a nostalgic nod to Microsoft Agent, powered by GitHub Copilot.**
 
+---
 
-# DigitalPetApp
+## 📘 Project Introduction  
+Welcome to a modern recreation of **Microsoft Agent Rover**, the iconic animated assistant from the early Windows era. This project is a fun and experimental tribute, built with the help of **GitHub Copilot**, combining retro charm with modern development tools.
 
-This project is a fun experiment created with the help of GitHub Copilot! I had a great time collaborating with Copilot to build a digital pet for Windows.
+---
 
-DigitalPetApp is a lightweight, fast-starting C# WPF desktop application that brings a digital pet (inspired by Microsoft Agent Rover) to your Windows desktop. The pet lives in a small window, can be animated, and is designed for easy extensibility—making it a fun base for future features like sound, tricks, and more.
+## 🐶 Short Description  
+A playful recreation of Microsoft Agent Rover — built with the help of GitHub Copilot to bring nostalgic charm to life.
 
-## Features
+---
+
+## ✨ Features
 - Lightweight and fast startup
 - Animated digital pet (dog/rover)
 - Clickable pet with fun animations
 - Notification and reminder support
 - Extensible architecture for adding new features (animations, sounds, tricks)
 
-## Screenshots
+
+## 🖼️ Screenshots
 <!-- Add screenshots here if available -->
 
-## Getting Started
+## 🚀 Getting Started
 1. **Clone the repository:**
 	```
 	git clone https://github.com/rinoreji/digital-pet.git
@@ -36,29 +44,29 @@ DigitalPetApp is a lightweight, fast-starting C# WPF desktop application that br
 	  dotnet run
 	  ```
 
-## Usage
+## 🕹️ Usage
 - The digital pet appears in a small window on your desktop.
 - Click the pet to trigger a fun animation.
 - Notifications and reminders can be triggered by features (see `FeatureManager`).
 
-## Extending the App
+## 🧩 Extending the App
 - Add new animations: See `AnimationHelper` and `AgentAnimationLoader`.
 - Add new sounds: See `SoundPlayerHelper` and `RoverSoundLoader`.
 - Add new features: Implement `IAgentFeature` and register with `FeatureManager`.
 
-## Project Structure
+## 🗂️ Project Structure
 - `MainWindow.xaml` / `.cs`: Main UI and logic
 - `Assets/`: Images, animation data, and sound assets
 - `FeatureManager.cs`: Feature registration and management
 - `AnimationHelper.cs`, `SoundPlayerHelper.cs`: Animation and sound utilities
 
-## Contributing
+## 🤝 Contributing
 Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
 
-## License
+## 📄 License
 MIT License. See [LICENSE](LICENSE) for details.
 
-## Credits
+## 🙏 Credits
 - Inspired by classic desktop pets and assistants, especially Microsoft Agent Rover
 - Agent animation and sound files adapted from [clippy.js](https://github.com/clippyjs/clippy.js) — thank you to the clippy.js project!
 - Built with .NET 9.0 and WPF

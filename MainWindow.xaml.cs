@@ -64,7 +64,7 @@ namespace DigitalPetApp
 
             // Register features (reminder, notifications, etc.)
             notificationService = new BalloonNotificationService();
-            featureManager.RegisterFeature(new ReminderFeature(notificationService));
+            featureManager.RegisterFeature(new ReminderFeature(notificationService, timerService));
             featureManager.RegisterFeature(new HourlyChimeFeature(notificationService, timerService));
 
             // Play default animation on startup (UI only)
@@ -81,7 +81,7 @@ namespace DigitalPetApp
         {
             // Example: Play a single animation (can be replaced with user action)
             //Get all Gestures as array
-            var allGestures = Enum.GetValues(typeof(Gestures)).Cast<Gestures>().ToArray();
+            //var allGestures = Enum.GetValues(typeof(Gestures)).Cast<Gestures>().ToArray();
             //AnimationHelper.PlayAnimationSequence(
             //    allGestures
             //);
@@ -89,7 +89,7 @@ namespace DigitalPetApp
                  new List<Gestures> { Gestures.Show }
             );
 
-            notificationService.ShowNotification("Rover" + " says hello!", "Dog Clicked");
+            //notificationService.ShowNotification("Rover" + " says hello!", "Dog Clicked");
         }
 
         private void DogImage_Click(object sender, MouseButtonEventArgs e)

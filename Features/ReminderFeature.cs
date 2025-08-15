@@ -1,27 +1,36 @@
+using DigitalPetApp.Helpers;
 using DigitalPetApp.Services;
-using System;
-using System.Windows;
-using System.Windows.Threading;
 
 namespace DigitalPetApp.Features
 {
     public class ReminderFeature : IAgentFeature
     {
-    private INotificationService? _notificationService;
-        private DispatcherTimer? _timer;
-        private TimeSpan _interval = TimeSpan.FromSeconds(10); // Default: 1 hour
+        private readonly INotificationService _notificationService;
+        private readonly AgentTimerService _timerService;
+        private readonly int _intervalMinutes;
+        private int _minuteCounter = 0;
         private string _reminderText = "Time for a break!";
 
-        public ReminderFeature(INotificationService notificationService)
+        public ReminderFeature(INotificationService notificationService, AgentTimerService timerService, int intervalMinutes = 30)
         {
             _notificationService = notificationService;
+            _timerService = timerService;
+            _intervalMinutes = intervalMinutes;
         }
 
         public void Initialize()
         {
-            _timer = new DispatcherTimer { Interval = _interval };
-            _timer.Tick += (s, e) => ShowReminder();
-            _timer.Start();
+            // No initialization needed
+        }
+
+        public void Start()
+        {
+            _timerService.MinuteTick += OnMinuteTick;
+        }
+
+        public void Stop()
+        {
+            _timerService.MinuteTick -= OnMinuteTick;
         }
 
         public void Update()
@@ -29,10 +38,20 @@ namespace DigitalPetApp.Features
             // Could check for conditions or update reminder logic
         }
 
+        private void OnMinuteTick()
+        {
+            _minuteCounter++;
+            if (_minuteCounter >= _intervalMinutes)
+            {
+                ShowReminder();
+                _minuteCounter = 0;
+            }
+        }
+
         private void ShowReminder()
         {
-            _notificationService?.ShowNotification(_reminderText, "Reminder");
-            // Optionally trigger an animation or sound here
+            _notificationService.ShowNotification(_reminderText, "Reminder");
+            AnimationHelper.PlayAnimationSequence([Gestures.GetAttention]);
         }
     }
 }

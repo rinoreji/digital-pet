@@ -1,4 +1,4 @@
-using System;
+using DigitalPetApp.Helpers;
 using DigitalPetApp.Services;
 
 namespace DigitalPetApp.Features
@@ -37,6 +37,7 @@ namespace DigitalPetApp.Features
         private void OnHourTick()
         {
             var now = DateTime.Now;
+            AnimationHelper.PlayAnimationSequence([Gestures.Greet]);
             _notificationService.ShowNotification($"It's {now:hh tt}! Time for your hourly chime.");
         }
     }

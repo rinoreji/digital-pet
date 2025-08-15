@@ -11,7 +11,6 @@ namespace DigitalPetApp.Services
             Application.Current.Dispatcher.Invoke(() =>
             {
                 var balloon = new BalloonNotificationWindow(message, title);
-                Debug.WriteLine(message + title);
                 balloon.Show();
                 // Now that the window is shown, ActualWidth/Height are valid
                 balloon.Dispatcher.InvokeAsync(() =>
@@ -37,7 +36,6 @@ namespace DigitalPetApp.Services
                         double balloonTop = point.Y / dpiY - height; // 10px above head
                         balloon.Left = balloonLeft;
                         balloon.Top = balloonTop;
-                        Debug.WriteLine($"point:{point}, left:{balloonLeft}, dog:{dogImage.ActualWidth}, baloon:{width}, hardcoded:{balloon.Left}");
                     }
                     else
                     {

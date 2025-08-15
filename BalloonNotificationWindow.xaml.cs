@@ -8,7 +8,7 @@ namespace DigitalPetApp
     {
         private readonly DispatcherTimer _closeTimer;
 
-        public BalloonNotificationWindow(string message, string title = "Notification", int durationMs = 3500)
+        public BalloonNotificationWindow(string message, string title = "Notification", int durationMs = 4500)
         {
             InitializeComponent();
             TitleText.Text = title;

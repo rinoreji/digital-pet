@@ -39,7 +39,14 @@ namespace DigitalPetApp.Helpers
             if (_soundLoader == null) throw new InvalidOperationException("AnimationHelper not initialized. Call Init first.");
             if (_imageControl == null) throw new InvalidOperationException("AnimationHelper not initialized. Call Init first.");
             if (_spriteSheetPath == null) throw new InvalidOperationException("AnimationHelper not initialized. Call Init first.");
-            if (gestures == null || gestures.Count() == 0) return;
+            if (gestures == null || !gestures.Any()) return;
+
+            var dispatcher = System.Windows.Application.Current?.Dispatcher;
+            if (dispatcher != null && !dispatcher.CheckAccess())
+            {
+                dispatcher.Invoke(() => PlayAnimationSequence(gestures));
+                return;
+            }
 
             var spriteUri = new Uri(_spriteSheetPath, UriKind.Absolute);
             var spriteBitmap = new BitmapImage(spriteUri);
@@ -57,7 +64,7 @@ namespace DigitalPetApp.Helpers
                 }
                 var GestureAnimType = gestures.ElementAt(gestureAnimIndex);
                 frames = _animationLoader!.GetFrames(GestureAnimType.ToString());
-                Debug.WriteLine($"Playing animation for gesture: {GestureAnimType}");
+                Debug.WriteLine($"Playing animation: {GestureAnimType} with {frames?.Count} frames");
                 currentFrame = 0;
                 if (frames == null || frames.Count == 0)
                 {
@@ -83,7 +90,7 @@ namespace DigitalPetApp.Helpers
                 // Play sound if specified
                 if (!string.IsNullOrEmpty(sound))
                 {
-                    Console.WriteLine("Sound", sound);
+                    Debug.WriteLine($"Playing sound: {sound}");
                     var dataUrl = _soundLoader!.GetSoundDataUrl(sound);
                     if (!string.IsNullOrEmpty(dataUrl))
                     {

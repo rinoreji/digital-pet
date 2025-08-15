@@ -19,7 +19,7 @@ DigitalPetApp is a lightweight, fast-starting C# WPF desktop application that br
 ## Getting Started
 1. **Clone the repository:**
 	```
-	git clone https://github.com/yourusername/digital-pet.git
+	git clone https://github.com/rinoreji/digital-pet.git
 	cd digital-pet
 	```
 2. **Open in Visual Studio or VS Code.**

@@ -4,17 +4,25 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DigitalPetApp"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        
-        Title="Digital Pet" Height="150" Width="150">
-    <Grid Background="LightGray">
+        Title="Digital Pet"
+        Background="Transparent"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Height="{DynamicResource WindowSize}"
+        Width="{DynamicResource WindowSize}">
+    <Window.Resources>
+        <sys:Double x:Key="WindowSize">100</sys:Double>
+        <sys:Double x:Key="SpriteFrameSize">80</sys:Double>
+    </Window.Resources>
+    <Grid Background="Transparent">
      <Image x:Name="DogImage"
-         Source="pack://application:,,,/Assets/Rover.png"
-         Width="128" Height="128"
+         Width="{DynamicResource SpriteFrameSize}"
+         Height="{DynamicResource SpriteFrameSize}"
          VerticalAlignment="Bottom"
          HorizontalAlignment="Left"
-         Margin="10">
-     </Image>
+         Margin="0"/>
     </Grid>
     <Window.ContextMenu>
         <ContextMenu>

@@ -16,36 +16,66 @@ namespace DigitalPetApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        // --- Configurable constants ---
+        private const string SpriteSheetPath = "pack://application:,,,/Assets/rover/map.png";
+        private const int SpriteFrameWidth = 80;
+        private const int SpriteFrameHeight = 80;
+        private const int WindowWidth = 100;
+        private const int WindowHeight = 100;
+        private const bool WindowTopmost = true;
+        private const bool WindowShowInTaskbar = true;
+        private const ResizeMode WindowResizeMode = ResizeMode.NoResize;
+    // Animation loader for agent.json
+        private static string GetAgentJsonPath()
+        {
+            var exeDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            return System.IO.Path.Combine(exeDir ?? "", "Assets", "rover", "agent.json");
+        }
+    private static readonly string AnimationName = "Acknowledge";
+    private readonly List<(int x, int y, int duration, string? sound)> frames;
+
         public MainWindow()
         {
             InitializeComponent();
-            // Make window borderless, always on top, not shown in taskbar
-            this.WindowStyle = WindowStyle.None;
-            this.AllowsTransparency = true;
-            this.Background = Brushes.LightGray; // For visibility during debugging
-            this.Topmost = true;
-            this.ShowInTaskbar = true;
-            this.ResizeMode = ResizeMode.NoResize;
+            this.Topmost = WindowTopmost;
+            this.ShowInTaskbar = WindowShowInTaskbar;
+            this.ResizeMode = WindowResizeMode;
+            this.Width = WindowWidth;
+            this.Height = WindowHeight;
 
-            // Position window above taskbar (bottom left)
+            // Position window above taskbar (bottom right)
             var desktopWorkingArea = SystemParameters.WorkArea;
-            this.Left = desktopWorkingArea.Left;
+            this.Left = desktopWorkingArea.Right - this.Width;
             this.Top = desktopWorkingArea.Bottom - this.Height;
-            this.Width = 150;
-            this.Height = 150;
 
-            // Animate the window itself along the taskbar
-            this.Loaded += (s, e) => {
-                var windowAnimation = new System.Windows.Media.Animation.DoubleAnimation
-                {
-                    From = desktopWorkingArea.Left,
-                    To = desktopWorkingArea.Right - this.Width,
-                    Duration = new Duration(System.TimeSpan.FromSeconds(5)),
-                    AutoReverse = true,
-                    RepeatBehavior = System.Windows.Media.Animation.RepeatBehavior.Forever
-                };
-                this.BeginAnimation(Window.LeftProperty, windowAnimation);
+            // Load animation frames from agent.json
+            var loader = new AgentAnimationLoader(GetAgentJsonPath());
+            frames = loader.GetFrames(AnimationName);
+            if (frames == null || frames.Count == 0)
+            {
+                MessageBox.Show($"Animation '{AnimationName}' not found in agent.json.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                frames = new List<(int x, int y, int duration, string? sound)> { (0, 0, 100, null) };
+            }
+
+            int frameWidth = SpriteFrameWidth;
+            int frameHeight = SpriteFrameHeight;
+            int currentFrame = 0;
+            var spriteUri = new System.Uri(SpriteSheetPath, System.UriKind.Absolute);
+            var spriteBitmap = new BitmapImage(spriteUri);
+
+            var timer = new System.Windows.Threading.DispatcherTimer();
+            timer.Interval = System.TimeSpan.FromMilliseconds(frames[0].duration);
+            timer.Tick += (s2, e2) =>
+            {
+                var (x, y, duration, sound) = frames[currentFrame];
+                var rect = new Int32Rect(x, y, frameWidth, frameHeight);
+                var cropped = new CroppedBitmap(spriteBitmap, rect);
+                DogImage.Source = cropped;
+                // Optionally: play sound here using 'sound' if not null
+                currentFrame = (currentFrame + 1) % frames.Count;
+                timer.Interval = System.TimeSpan.FromMilliseconds(frames[currentFrame].duration);
             };
+            timer.Start();
         }
 
         private void ExitMenuItem_Click(object sender, RoutedEventArgs e)

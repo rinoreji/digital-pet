@@ -11,6 +11,13 @@
   <ItemGroup>
     <Resource Include="Assets\dog1.png" />
     <Resource Include="Assets\Rover.png" />
+    <Resource Include="Assets\rover\map.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Assets\rover\agent.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

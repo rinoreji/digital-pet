@@ -1,0 +1,24 @@
+<Window x:Class="DigitalPetApp.BalloonNotificationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        Topmost="True"
+        Width="250" Height="80"
+        ResizeMode="NoResize"
+        ShowActivated="False">
+    <Border CornerRadius="12" Background="#FFFAF4C0" BorderBrush="#FFD8B400" BorderThickness="2" Padding="10">
+        <Border.Effect>
+            <DropShadowEffect Color="#888" BlurRadius="10" ShadowDepth="2"/>
+        </Border.Effect>
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/Assets/Rover.png" Width="40" Height="40" Margin="0,0,10,0"/>
+            <StackPanel>
+                <TextBlock x:Name="TitleText" FontWeight="Bold" Foreground="#FF8A6D00" FontSize="14"/>
+                <TextBlock x:Name="MessageText" TextWrapping="Wrap" Foreground="#FF4B3B00" FontSize="13"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>

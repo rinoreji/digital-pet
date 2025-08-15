@@ -22,7 +22,8 @@
          Height="{DynamicResource SpriteFrameSize}"
          VerticalAlignment="Bottom"
          HorizontalAlignment="Left"
-         Margin="0"/>
+         Margin="0"
+         MouseLeftButtonUp="DogImage_Click"/>
     </Grid>
     <Window.ContextMenu>
         <ContextMenu>

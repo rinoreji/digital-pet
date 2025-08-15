@@ -24,6 +24,7 @@ namespace DigitalPetApp
     private const ResizeMode WindowResizeMode = ResizeMode.NoResize;
     private readonly AgentAnimationLoader animationLoader;
     private readonly RoverSoundLoader soundLoader;
+    private readonly FeatureManager featureManager = new FeatureManager();
 
         public MainWindow()
         {
@@ -56,6 +57,10 @@ namespace DigitalPetApp
                 80  // frame height
             );
 
+            // Register features (reminder, notifications, etc.)
+            var notificationService = new BalloonNotificationService();
+            featureManager.RegisterFeature(new ReminderFeature(notificationService));
+
             // Play default animation on startup (UI only)
             PlayDefaultAnimation();
         }
@@ -69,12 +74,24 @@ namespace DigitalPetApp
             //    allGestures
             //);
             AnimationHelper.PlayAnimationSequence(
-                 new List<Gestures> { Gestures.Show, Gestures.Greet, Gestures.Hide }
+                 new List<Gestures> { Gestures.Show  }
+            );
+        }
+
+        private void DogImage_Click(object sender, MouseButtonEventArgs e)
+        {
+            // Play a fun animation on click
+            AnimationHelper.PlayAnimationSequence(
+                new List<Gestures> { Gestures.ClickedOn }
             );
         }
 
         private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            // AnimationHelper.PlayAnimationSequence(
+            //     new List<Gestures> { Gestures.Hide }
+            // );            
+            // Task.Delay(10000).ContinueWith(_ => Application.Current.Shutdown());
             Application.Current.Shutdown();
         }
     }

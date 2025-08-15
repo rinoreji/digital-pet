@@ -1,0 +1,184 @@
+# Visual Studio solution user options
+.vs/
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Mono Auto Generated Files
+mono_crash.*
+
+# Windows image file caches
+Thumbs.db
+*.DS_Store
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+*.sln.iml
+
+# DotCover
+*.dotCover
+
+# NuGet
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/packages/repositories.config
+
+# Backup & VS temp files
+*~
+*.bak
+*.tmp
+*.temp
+
+# Publish Web Output
+*.Publish.xml
+
+# Others
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.resharper
+*.DotSettings.user
+
+# Rider
+.idea/
+*.sln.iml
+
+# Local history for Visual Studio
+.localhistory/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# WPF designer files
+*.cache
+*.dbmdl
+
+# Logs
+*.log
+
+# Test Results
+TestResults/
+
+# NCrunch
+*.ncrunch*
+.*crunch*.local.xml
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# TFS
+$tf/
+
+# DotCover
+*.dotCover
+
+# StyleCop
+StyleCopReport.xml
+
+# Files built by Visual Studio
+*.dll
+*.exe
+*.app
+*.pdb
+*.cache
+*.mdb
+*.log
+*.vspscc
+*.vssscc
+*.scc
+*.vsix
+*.docstates
+*.userprefs
+*.dbmdl
+*.bak
+*.backup
+*.swp
+*.swo
+*.tmp
+*.temp
+*.vsix
+*.vsixmanifest
+*.vsmdi
+*.testsettings
+*.vspscc
+*.vssscc
+*.scc
+*.cache
+*.dbmdl
+*.bak
+*.backup
+*.swp
+*.swo
+*.tmp
+*.temp
+*.vsix
+*.vsixmanifest
+*.vsmdi
+*.testsettings
+*.vspscc
+*.vssscc
+*.scc
+*.cache
+*.dbmdl
+*.bak
+*.backup
+*.swp
+*.swo
+*.tmp
+*.temp
+*.vsix
+*.vsixmanifest
+*.vsmdi
+*.testsettings
+*.vspscc
+*.vssscc
+*.scc
+*.cache
+*.dbmdl
+*.bak
+*.backup
+*.swp
+*.swo
+*.tmp
+*.temp
+*.vsix
+*.vsixmanifest
+*.vsmdi
+*.testsettings
+*.vspscc
+*.vssscc
+*.scc
+*.cache
+*.dbmdl
+*.bak
+*.backup
+*.swp
+*.swo
+*.tmp
+*.temp
+*.vsix
+*.vsixmanifest
+*.vsmdi
+*.testsettings

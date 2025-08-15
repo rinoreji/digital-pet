@@ -1,0 +1,24 @@
+﻿<Window x:Class="DigitalPetApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DigitalPetApp"
+        mc:Ignorable="d"
+        
+        Title="Digital Pet" Height="150" Width="150">
+    <Grid Background="LightGray">
+     <Image x:Name="DogImage"
+         Source="pack://application:,,,/Assets/Rover.png"
+         Width="128" Height="128"
+         VerticalAlignment="Bottom"
+         HorizontalAlignment="Left"
+         Margin="10">
+     </Image>
+    </Grid>
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem Header="Exit" Click="ExitMenuItem_Click"/>
+        </ContextMenu>
+    </Window.ContextMenu>
+</Window>

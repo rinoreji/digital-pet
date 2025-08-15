@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
-namespace DigitalPetApp
+namespace DigitalPetApp.Helpers
 {
     public static class AnimationHelper
     {

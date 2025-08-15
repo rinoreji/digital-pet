@@ -1,6 +1,6 @@
 using System.Windows;
 
-namespace DigitalPetApp
+namespace DigitalPetApp.Services
 {
     public class WindowNotificationService : INotificationService
     {

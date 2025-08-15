@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text.Json;
 
-namespace DigitalPetApp
+namespace DigitalPetApp.Helpers
 {
     public class AgentAnimationLoader
     {

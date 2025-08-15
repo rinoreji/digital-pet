@@ -1,8 +1,9 @@
+using DigitalPetApp.Services;
 using System;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace DigitalPetApp
+namespace DigitalPetApp.Features
 {
     public class ReminderFeature : IAgentFeature
     {

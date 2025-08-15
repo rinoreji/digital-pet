@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DigitalPetApp
+namespace DigitalPetApp.Features
 {
     public class FeatureManager
     {

@@ -1,7 +1,8 @@
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Threading;
 
-namespace DigitalPetApp
+namespace DigitalPetApp.Services
 {
     public class BalloonNotificationService : INotificationService
     {
@@ -18,12 +19,12 @@ namespace DigitalPetApp
                     var width = balloon.ActualWidth > 0 ? balloon.ActualWidth : balloon.Width;
                     var height = balloon.ActualHeight > 0 ? balloon.ActualHeight : balloon.Height;
                     var mainWindow = Application.Current.MainWindow as Window;
-                    if (mainWindow != null && mainWindow.FindName("DogImage") is System.Windows.FrameworkElement dogImage)
+                    if (mainWindow != null && mainWindow.FindName("DogImage") is FrameworkElement dogImage)
                     {
                         // Get DogImage position relative to screen
-                        var point = dogImage.PointToScreen(new System.Windows.Point(0, 0));
+                        var point = dogImage.PointToScreen(new Point(0, 0));
                         // Get system DPI scaling
-                        var source = System.Windows.PresentationSource.FromVisual(mainWindow);
+                        var source = PresentationSource.FromVisual(mainWindow);
                         double dpiX = 1.0, dpiY = 1.0;
                         if (source != null)
                         {
@@ -31,9 +32,9 @@ namespace DigitalPetApp
                             dpiY = source.CompositionTarget.TransformToDevice.M22;
                         }
                         // Convert WPF units to physical pixels, then back to WPF units for correct placement
-                        double dogImageCenterX = (point.X / dpiX) + (dogImage.ActualWidth / 2);
-                        double balloonLeft = dogImageCenterX - (width / 2) - 50;
-                        double balloonTop = (point.Y / dpiY) - height; // 10px above head
+                        double dogImageCenterX = point.X / dpiX + dogImage.ActualWidth / 2;
+                        double balloonLeft = dogImageCenterX - width / 2 - 50;
+                        double balloonTop = point.Y / dpiY - height; // 10px above head
                         balloon.Left = balloonLeft;
                         balloon.Top = balloonTop;
                         Debug.WriteLine($"point:{point}, left:{balloonLeft}, dog:{dogImage.ActualWidth}, baloon:{width}, hardcoded:{balloon.Left}");
@@ -45,7 +46,7 @@ namespace DigitalPetApp
                         balloon.Left = desktop.Right - width - 10;
                         balloon.Top = desktop.Bottom - height - 10;
                     }
-                }, System.Windows.Threading.DispatcherPriority.Loaded);
+                }, DispatcherPriority.Loaded);
             });
         }
     }

@@ -1,4 +1,4 @@
-namespace DigitalPetApp
+namespace DigitalPetApp.Services
 {
     public interface INotificationService
     {

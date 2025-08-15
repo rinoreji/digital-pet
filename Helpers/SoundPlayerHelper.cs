@@ -3,7 +3,7 @@ using System.IO;
 using System.Media;
 using System.Windows.Media;
 
-namespace DigitalPetApp
+namespace DigitalPetApp.Helpers
 {
     public static class SoundPlayerHelper
     {

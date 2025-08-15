@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using DigitalPetApp.Features;
+using DigitalPetApp.Helpers;
+using DigitalPetApp.Services;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -26,6 +29,7 @@ namespace DigitalPetApp
         private readonly RoverSoundLoader soundLoader;
         private readonly FeatureManager featureManager = new FeatureManager();
         private readonly BalloonNotificationService notificationService;
+        private readonly AgentTimerService timerService = new AgentTimerService();
 
         public MainWindow()
         {
@@ -61,9 +65,16 @@ namespace DigitalPetApp
             // Register features (reminder, notifications, etc.)
             notificationService = new BalloonNotificationService();
             featureManager.RegisterFeature(new ReminderFeature(notificationService));
+            featureManager.RegisterFeature(new HourlyChimeFeature(notificationService, timerService));
 
             // Play default animation on startup (UI only)
             PlayDefaultAnimation();
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            timerService.Dispose();
         }
 
         private void PlayDefaultAnimation()

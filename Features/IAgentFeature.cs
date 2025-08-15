@@ -1,4 +1,4 @@
-namespace DigitalPetApp
+namespace DigitalPetApp.Features
 {
     public interface IAgentFeature
     {

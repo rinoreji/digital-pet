@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -32,34 +33,35 @@ namespace DigitalPetApp
             _frameHeight = frameHeight;
         }
 
-        public static void PlayAnimationSequence(List<Gestures> animationTypes)
+        public static void PlayAnimationSequence(IEnumerable<Gestures> gestures)
         {
             if (_animationLoader == null) throw new InvalidOperationException("AnimationHelper not initialized. Call Init first.");
             if (_soundLoader == null) throw new InvalidOperationException("AnimationHelper not initialized. Call Init first.");
             if (_imageControl == null) throw new InvalidOperationException("AnimationHelper not initialized. Call Init first.");
             if (_spriteSheetPath == null) throw new InvalidOperationException("AnimationHelper not initialized. Call Init first.");
-            if (animationTypes == null || animationTypes.Count == 0) return;
+            if (gestures == null || gestures.Count() == 0) return;
 
             var spriteUri = new Uri(_spriteSheetPath, UriKind.Absolute);
             var spriteBitmap = new BitmapImage(spriteUri);
-            int animIndex = 0;
+            int gestureAnimIndex = 0;
             List<(int x, int y, int duration, string? sound)>? frames = null;
             int currentFrame = 0;
             DispatcherTimer timer = new DispatcherTimer();
 
             void PlayNextAnimation()
             {
-                if (animIndex >= animationTypes.Count)
+                if (gestureAnimIndex >= gestures.Count())
                 {
                     timer.Stop();
                     return;
                 }
-                var animType = animationTypes[animIndex];
-                frames = _animationLoader!.GetFrames(animType.ToString());
+                var GestureAnimType = gestures.ElementAt(gestureAnimIndex);
+                frames = _animationLoader!.GetFrames(GestureAnimType.ToString());
+                Debug.WriteLine($"Playing animation for gesture: {GestureAnimType}");
                 currentFrame = 0;
                 if (frames == null || frames.Count == 0)
                 {
-                    animIndex++;
+                    gestureAnimIndex++;
                     PlayNextAnimation();
                     return;
                 }
@@ -70,7 +72,7 @@ namespace DigitalPetApp
             {
                 if (frames == null || frames.Count == 0)
                 {
-                    animIndex++;
+                    gestureAnimIndex++;
                     PlayNextAnimation();
                     return;
                 }
@@ -81,6 +83,7 @@ namespace DigitalPetApp
                 // Play sound if specified
                 if (!string.IsNullOrEmpty(sound))
                 {
+                    Console.WriteLine("Sound", sound);
                     var dataUrl = _soundLoader!.GetSoundDataUrl(sound);
                     if (!string.IsNullOrEmpty(dataUrl))
                     {
@@ -90,7 +93,7 @@ namespace DigitalPetApp
                 currentFrame++;
                 if (currentFrame >= frames.Count)
                 {
-                    animIndex++;
+                    gestureAnimIndex++;
                     PlayNextAnimation();
                 }
                 else

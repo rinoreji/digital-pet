@@ -63,8 +63,13 @@ namespace DigitalPetApp
         private void PlayDefaultAnimation()
         {
             // Example: Play a single animation (can be replaced with user action)
+            //Get all Gestures as array
+            var allGestures = Enum.GetValues(typeof(Gestures)).Cast<Gestures>().ToArray();
+            //AnimationHelper.PlayAnimationSequence(
+            //    allGestures
+            //);
             AnimationHelper.PlayAnimationSequence(
-                new List<Gestures> { Gestures.Pleased, Gestures.Congratulate }
+                 new List<Gestures> { Gestures.Show, Gestures.Greet, Gestures.Hide }
             );
         }
 

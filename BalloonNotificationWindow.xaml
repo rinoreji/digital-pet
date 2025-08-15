@@ -6,19 +6,47 @@
         Background="Transparent"
         ShowInTaskbar="False"
         Topmost="True"
-        Width="250" Height="80"
+        Width="210" Height="125"
         ResizeMode="NoResize"
         ShowActivated="False">
-    <Border CornerRadius="12" Background="#FFFAF4C0" BorderBrush="#FFD8B400" BorderThickness="2" Padding="10">
+    <!--<Border CornerRadius="12" Background="#FFFAF4C0" BorderBrush="#FFD8B400" BorderThickness="2" Padding="10">
         <Border.Effect>
             <DropShadowEffect Color="#888" BlurRadius="10" ShadowDepth="2"/>
         </Border.Effect>
         <StackPanel Orientation="Horizontal">
-            <Image Source="/Assets/Rover.png" Width="40" Height="40" Margin="0,0,10,0"/>
             <StackPanel>
                 <TextBlock x:Name="TitleText" FontWeight="Bold" Foreground="#FF8A6D00" FontSize="14"/>
                 <TextBlock x:Name="MessageText" TextWrapping="Wrap" Foreground="#FF4B3B00" FontSize="13"/>
             </StackPanel>
         </StackPanel>
-    </Border>
+    </Border>-->
+
+    <Grid>
+        <!-- Balloon shape with tail -->
+        <Canvas>
+            <Path Stroke="Black" StrokeThickness="1" Fill="LightYellow">
+                <Path.Data>
+                    <GeometryGroup>
+                        <!-- Balloon body -->
+                        <EllipseGeometry Center="105,59" RadiusX="100" RadiusY="50"/>
+                        <!-- Tail -->
+                        <PathGeometry>
+                            <PathFigure x:Name="C" StartPoint="130,107">
+                                <LineSegment x:Name="B" Point="140,120"/>
+                                <LineSegment x:Name="A" Point="115,108"/>
+                            </PathFigure>
+                        </PathGeometry>
+                    </GeometryGroup>
+                </Path.Data>
+            </Path>
+        </Canvas>
+        <!-- Centered text inside balloon -->
+        <Grid Width="220" Height="90" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,5">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock x:Name="TitleText" FontWeight="Bold" Foreground="#FF8A6D00" FontSize="15" FontFamily="Comic Sans MS" TextAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="MessageText" TextWrapping="Wrap" Foreground="#FF4B3B00" FontSize="13" FontFamily="Comic Sans MS" TextAlignment="Center" HorizontalAlignment="Center" Margin="0,4,0,0"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+
 </Window>

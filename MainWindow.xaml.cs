@@ -16,15 +16,16 @@ namespace DigitalPetApp
     /// </summary>
     public partial class MainWindow : Window
     {
-    // --- UI Configurable constants ---
-    private const int WindowWidth = 100;
-    private const int WindowHeight = 100;
-    private const bool WindowTopmost = true;
-    private const bool WindowShowInTaskbar = true;
-    private const ResizeMode WindowResizeMode = ResizeMode.NoResize;
-    private readonly AgentAnimationLoader animationLoader;
-    private readonly RoverSoundLoader soundLoader;
-    private readonly FeatureManager featureManager = new FeatureManager();
+        // --- UI Configurable constants ---
+        private const int WindowWidth = 100;
+        private const int WindowHeight = 100;
+        private const bool WindowTopmost = true;
+        private const bool WindowShowInTaskbar = true;
+        private const ResizeMode WindowResizeMode = ResizeMode.NoResize;
+        private readonly AgentAnimationLoader animationLoader;
+        private readonly RoverSoundLoader soundLoader;
+        private readonly FeatureManager featureManager = new FeatureManager();
+        private readonly BalloonNotificationService notificationService;
 
         public MainWindow()
         {
@@ -58,7 +59,7 @@ namespace DigitalPetApp
             );
 
             // Register features (reminder, notifications, etc.)
-            var notificationService = new BalloonNotificationService();
+            notificationService = new BalloonNotificationService();
             featureManager.RegisterFeature(new ReminderFeature(notificationService));
 
             // Play default animation on startup (UI only)
@@ -74,8 +75,10 @@ namespace DigitalPetApp
             //    allGestures
             //);
             AnimationHelper.PlayAnimationSequence(
-                 new List<Gestures> { Gestures.Show  }
+                 new List<Gestures> { Gestures.Show }
             );
+
+            notificationService.ShowNotification("Rover" + " says hello!", "Dog Clicked");
         }
 
         private void DogImage_Click(object sender, MouseButtonEventArgs e)
@@ -84,6 +87,7 @@ namespace DigitalPetApp
             AnimationHelper.PlayAnimationSequence(
                 new List<Gestures> { Gestures.ClickedOn }
             );
+            notificationService.ShowNotification("Rover" + " says hello!", "Dog Clicked");
         }
 
         private void ExitMenuItem_Click(object sender, RoutedEventArgs e)

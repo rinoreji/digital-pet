@@ -64,7 +64,7 @@ namespace DigitalPetApp.Helpers
                 }
                 var GestureAnimType = gestures.ElementAt(gestureAnimIndex);
                 frames = _animationLoader!.GetFrames(GestureAnimType.ToString());
-                Debug.WriteLine($"Playing animation: {GestureAnimType} with {frames?.Count} frames");
+                Debug.WriteLine($"        ===>        Playing animation: {GestureAnimType} with {frames?.Count} frames");
                 currentFrame = 0;
                 if (frames == null || frames.Count == 0)
                 {

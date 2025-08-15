@@ -29,7 +29,8 @@ namespace DigitalPetApp
         private readonly RoverSoundLoader soundLoader;
         private readonly FeatureManager featureManager = new FeatureManager();
         private readonly BalloonNotificationService notificationService;
-        private readonly AgentTimerService timerService = new AgentTimerService();
+    private readonly AgentTimerService timerService = new AgentTimerService();
+    private readonly ActivityMonitor? activityMonitor;
 
         public MainWindow()
         {
@@ -62,10 +63,18 @@ namespace DigitalPetApp
                 80  // frame height
             );
 
-            // Register features (reminder, notifications, etc.)
+            // Register features (reminder, notifications, idle animation, etc.)
             notificationService = new BalloonNotificationService();
-            featureManager.RegisterFeature(new ReminderFeature(notificationService, timerService));
-            featureManager.RegisterFeature(new HourlyChimeFeature(notificationService, timerService));
+
+            // Create ActivityMonitor using shared timer; idle threshold 60s (configurable)
+            var monitor = new ActivityMonitor(timerService, idleSeconds: 60);
+            this.activityMonitor = monitor;
+
+            // Register features, passing the activity monitor so they can report activity
+            featureManager.RegisterFeature(new ReminderFeature(notificationService, timerService, intervalMinutes: 30, activityMonitor: monitor));
+            featureManager.RegisterFeature(new HourlyChimeFeature(notificationService, timerService, monitor));
+            // Idle animation feature listens to ActivityMonitor.IdleStarted
+            featureManager.RegisterFeature(new IdleAnimationFeature(monitor, timerService));
 
             // Play default animation on startup (UI only)
             PlayDefaultAnimation();
@@ -75,6 +84,7 @@ namespace DigitalPetApp
         {
             base.OnClosed(e);
             timerService.Dispose();
+            activityMonitor?.Dispose();
         }
 
         private void PlayDefaultAnimation()

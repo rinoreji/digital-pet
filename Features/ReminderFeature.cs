@@ -7,15 +7,17 @@ namespace DigitalPetApp.Features
     {
         private readonly INotificationService _notificationService;
         private readonly AgentTimerService _timerService;
+    private readonly Services.ActivityMonitor? _activityMonitor;
         private readonly int _intervalMinutes;
         private int _minuteCounter = 0;
         private string _reminderText = "Time for a break!";
 
-        public ReminderFeature(INotificationService notificationService, AgentTimerService timerService, int intervalMinutes = 30)
+        public ReminderFeature(INotificationService notificationService, AgentTimerService timerService, int intervalMinutes = 30, Services.ActivityMonitor? activityMonitor = null)
         {
             _notificationService = notificationService;
             _timerService = timerService;
             _intervalMinutes = intervalMinutes;
+            _activityMonitor = activityMonitor;
         }
 
         public void Initialize()
@@ -51,7 +53,8 @@ namespace DigitalPetApp.Features
         private void ShowReminder()
         {
             _notificationService.ShowNotification(_reminderText, "Reminder");
-            AnimationHelper.PlayAnimationSequence([Gestures.GetAttention]);
+            AnimationHelper.PlayAnimationSequence(new System.Collections.Generic.List<Gestures> { Gestures.GetAttention });
+            _activityMonitor?.ReportActivity();
         }
     }
 }

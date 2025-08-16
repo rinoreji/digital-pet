@@ -28,6 +28,7 @@
                 <CheckBox Content="Reminder" IsChecked="{Binding EnableReminder}"/>
                 <CheckBox Content="Hourly Chime" IsChecked="{Binding EnableHourlyChime}"/>
                 <CheckBox Content="Idle Animation" IsChecked="{Binding EnableIdleAnimation}"/>
+                <CheckBox Content="Random Trick" IsChecked="{Binding EnableRandomTrick}"/>
             </StackPanel>
         </GroupBox>
 

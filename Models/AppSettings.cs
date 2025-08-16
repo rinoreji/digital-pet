@@ -8,4 +8,5 @@ public class AppSettings
     public bool EnableReminder { get; set; } = true;
     public bool EnableHourlyChime { get; set; } = true;
     public bool EnableIdleAnimation { get; set; } = true;
+    public bool EnableRandomTrick { get; set; } = true;
 }

@@ -74,9 +74,11 @@ namespace DigitalPetApp
             var reminder = new ReminderFeature(notificationService, timerService, intervalMinutes: settingsService.Current.ReminderIntervalMinutes, activityMonitor: monitor, animationService: animationService, logger: logger) { IsEnabled = settingsService.Current.EnableReminder };
             var chime = new HourlyChimeFeature(notificationService, timerService, monitor, animationService, logger) { IsEnabled = settingsService.Current.EnableHourlyChime };
             var idle = new IdleAnimationFeature(monitor, timerService, animationService, logger) { IsEnabled = settingsService.Current.EnableIdleAnimation };
+            var randomTrick = new RandomTrickFeature(timerService, monitor, animationService, logger) { IsEnabled = settingsService.Current.EnableRandomTrick };
             featureHost.RegisterFeature("Reminder", reminder, start: reminder.IsEnabled);
             featureHost.RegisterFeature("HourlyChime", chime, start: chime.IsEnabled);
             featureHost.RegisterFeature("IdleAnimation", idle, start: idle.IsEnabled);
+            featureHost.RegisterFeature("RandomTrick", randomTrick, start: randomTrick.IsEnabled);
 
             // Now create ViewModel which will populate Features collection
             viewModel = new ViewModels.MainViewModel(animationService, notificationService, settingsService, featureHost, monitor);

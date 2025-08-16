@@ -23,6 +23,7 @@ public class SettingsViewModel : INotifyPropertyChanged
         enableReminder = settingsService.Current.EnableReminder;
         enableHourlyChime = settingsService.Current.EnableHourlyChime;
         enableIdleAnimation = settingsService.Current.EnableIdleAnimation;
+    enableRandomTrick = settingsService.Current.EnableRandomTrick;
     SaveCommand = new RelayCommand(_ => Save());
     CancelCommand = new RelayCommand(_ => CloseWindow());
     }
@@ -39,6 +40,8 @@ public class SettingsViewModel : INotifyPropertyChanged
     public bool EnableHourlyChime { get => enableHourlyChime; set { if (value!=enableHourlyChime){ enableHourlyChime=value; OnPropertyChanged(); } } }
     private bool enableIdleAnimation;
     public bool EnableIdleAnimation { get => enableIdleAnimation; set { if (value!=enableIdleAnimation){ enableIdleAnimation=value; OnPropertyChanged(); } } }
+    private bool enableRandomTrick;
+    public bool EnableRandomTrick { get => enableRandomTrick; set { if (value!=enableRandomTrick){ enableRandomTrick=value; OnPropertyChanged(); } } }
 
     public ICommand SaveCommand { get; }
     public ICommand CancelCommand { get; }
@@ -50,11 +53,13 @@ public class SettingsViewModel : INotifyPropertyChanged
         settingsService.Current.EnableReminder = EnableReminder;
         settingsService.Current.EnableHourlyChime = EnableHourlyChime;
         settingsService.Current.EnableIdleAnimation = EnableIdleAnimation;
+    settingsService.Current.EnableRandomTrick = EnableRandomTrick;
         settingsService.Save();
         // Apply feature enable status live
         featureHost.SetEnabled("Reminder", EnableReminder);
         featureHost.SetEnabled("HourlyChime", EnableHourlyChime);
         featureHost.SetEnabled("IdleAnimation", EnableIdleAnimation);
+    featureHost.SetEnabled("RandomTrick", EnableRandomTrick);
         // Live idle timeout update
         activityMonitor.UpdateIdleThreshold(IdleTimeoutSeconds);
         // Update reminder interval if feature present

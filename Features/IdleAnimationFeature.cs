@@ -112,7 +112,8 @@ namespace DigitalPetApp.Features
                     }
                 }
                 Debug.WriteLine($"   ============>   Playing idle gestures: {string.Join(", ", chosen)}");
-                _animationService?.PlaySequence(chosen);
+                if (chosen.Count > 0)
+                    _animationService?.PlaySequence(chosen);
                 _activityMonitor.ReportActivity(); // Report activity to reset idle timer
             }
             catch

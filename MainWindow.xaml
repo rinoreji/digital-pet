@@ -28,16 +28,6 @@
     </Grid>
     <Window.ContextMenu>
         <ContextMenu>
-            <MenuItem Header="Features" ItemsSource="{Binding Features}">
-                <MenuItem.ItemContainerStyle>
-                    <Style TargetType="MenuItem">
-                        <Setter Property="Header" Value="{Binding DisplayName}"/>
-                        <Setter Property="IsCheckable" Value="True"/>
-                        <Setter Property="IsChecked" Value="{Binding IsEnabled, Mode=TwoWay}"/>
-                        <Setter Property="Command" Value="{Binding ToggleCommand}"/>
-                    </Style>
-                </MenuItem.ItemContainerStyle>
-            </MenuItem>
             <MenuItem Header="Settings" Command="{Binding OpenSettingsCommand}"/>
             <MenuItem Header="Exit" Command="{Binding ExitCommand}"/>
         </ContextMenu>

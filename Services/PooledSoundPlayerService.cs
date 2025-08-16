@@ -1,8 +1,8 @@
-using System.Windows.Media;
 using System.Collections.Concurrent;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using System.IO;
+using System.Windows.Media;
 
 namespace DigitalPetApp.Services;
 
@@ -21,8 +21,8 @@ public class PooledSoundPlayerService : ISoundPlayerService, IDisposable
     public PooledSoundPlayerService(int poolSize = 3)
     {
         this.poolSize = poolSize;
-        cacheDir = Path.Combine(Path.GetTempPath(), "DigitalPetSoundCache");
-        Directory.CreateDirectory(cacheDir);
+    cacheDir = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "DigitalPetSoundCache");
+    System.IO.Directory.CreateDirectory(cacheDir);
     }
 
     public void PlayDataUrl(string? dataUrl)

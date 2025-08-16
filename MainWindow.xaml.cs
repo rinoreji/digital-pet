@@ -24,7 +24,8 @@ namespace DigitalPetApp
         private readonly BalloonNotificationService notificationService;
         private readonly AgentTimerService timerService = new AgentTimerService();
         private readonly ActivityMonitor? activityMonitor;
-        private readonly ViewModels.MainViewModel viewModel;
+    private readonly ViewModels.MainViewModel viewModel;
+    private readonly SettingsService settingsService = new SettingsService();
         private readonly AgentAnimationLoader animationLoader;
         private readonly RoverSoundLoader soundLoader;
 
@@ -49,7 +50,7 @@ namespace DigitalPetApp
             animationLoader = new AgentAnimationLoader(agentJsonPath);
             soundLoader = new RoverSoundLoader(soundJsonPath);
 
-            // Initialize AnimationHelper with one-time parameters
+            // Animation service initialized (legacy AnimationHelper removed)
             var animationService = new Services.SpriteSheetAnimationService(
                 animationLoader,
                 soundLoader,
@@ -66,11 +67,11 @@ namespace DigitalPetApp
 
             // Register features (reminder, notifications, idle animation, etc.)
             // Create ActivityMonitor using shared timer; idle threshold 60s (configurable)
-            var monitor = new ActivityMonitor(timerService, idleSeconds: 60);
+            var monitor = new ActivityMonitor(timerService, idleSeconds: settingsService.Current.IdleTimeoutSeconds);
             this.activityMonitor = monitor;
 
             // Register features, passing the activity monitor so they can report activity
-            featureHost.RegisterFeature(new ReminderFeature(notificationService, timerService, intervalMinutes: 30, activityMonitor: monitor, animationService: animationService, logger: logger));
+            featureHost.RegisterFeature(new ReminderFeature(notificationService, timerService, intervalMinutes: settingsService.Current.ReminderIntervalMinutes, activityMonitor: monitor, animationService: animationService, logger: logger));
             featureHost.RegisterFeature(new HourlyChimeFeature(notificationService, timerService, monitor, animationService, logger));
             featureHost.RegisterFeature(new IdleAnimationFeature(monitor, timerService, animationService, logger));
 

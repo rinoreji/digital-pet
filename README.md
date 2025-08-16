@@ -19,6 +19,7 @@ A playful recreation of Microsoft Agent Rover — built with the help of GitHub 
 - Clickable pet with fun animations
 - Notification and reminder support
 - Extensible architecture for adding new features (animations, sounds, tricks)
+- JSON-configurable idle timeout & reminder interval (`appsettings.user.json` auto-created at first run)
 
 
 ## 🖼️ Screenshots

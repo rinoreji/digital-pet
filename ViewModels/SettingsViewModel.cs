@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using DigitalPetApp.Services;
@@ -22,8 +23,8 @@ public class SettingsViewModel : INotifyPropertyChanged
         enableReminder = settingsService.Current.EnableReminder;
         enableHourlyChime = settingsService.Current.EnableHourlyChime;
         enableIdleAnimation = settingsService.Current.EnableIdleAnimation;
-        SaveCommand = new RelayCommand(_ => Save());
-        CancelCommand = new RelayCommand(w => (w as System.Windows.Window)?.Close());
+    SaveCommand = new RelayCommand(_ => Save());
+    CancelCommand = new RelayCommand(_ => CloseWindow());
     }
 
     private int idleTimeoutSeconds;
@@ -62,6 +63,11 @@ public class SettingsViewModel : INotifyPropertyChanged
             rf.UpdateInterval(ReminderIntervalMinutes);
         }
         // Close window
+        CloseWindow();
+    }
+
+    private void CloseWindow()
+    {
         System.Windows.Application.Current.Windows
             .OfType<System.Windows.Window>()
             .FirstOrDefault(w => w is Views.SettingsWindow)?.Close();

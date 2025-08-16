@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System;
 
 namespace DigitalPetApp.Features
 {
+    [Obsolete("Use Services.FeatureHost instead")] 
     public class FeatureManager
     {
         private readonly List<IAgentFeature> _features = new();

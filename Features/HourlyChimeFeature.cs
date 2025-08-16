@@ -7,15 +7,19 @@ namespace DigitalPetApp.Features
 {
     public class HourlyChimeFeature : IAgentFeature
     {
-        private readonly INotificationService _notificationService;
-        private readonly AgentTimerService _timerService;
-        private readonly ActivityMonitor? _activityMonitor;
+    private readonly INotificationService _notificationService;
+    private readonly AgentTimerService _timerService;
+    private readonly ActivityMonitor? _activityMonitor;
+    private readonly Services.IAnimationService? _animationService;
+    private readonly Services.ILoggingService? _logger;
 
-        public HourlyChimeFeature(INotificationService notificationService, AgentTimerService timerService, ActivityMonitor? activityMonitor = null)
+        public HourlyChimeFeature(INotificationService notificationService, AgentTimerService timerService, ActivityMonitor? activityMonitor = null, Services.IAnimationService? animationService = null, Services.ILoggingService? logger = null)
         {
             _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
             _timerService = timerService ?? throw new ArgumentNullException(nameof(timerService));
             _activityMonitor = activityMonitor;
+            _animationService = animationService;
+            _logger = logger;
         }
 
         public void Initialize()
@@ -41,7 +45,8 @@ namespace DigitalPetApp.Features
         private void OnHourTick()
         {
             var now = DateTime.Now;
-            AnimationHelper.PlayAnimationSequence(new List<Gestures> { Gestures.Greet });
+            _logger?.Info($"Hourly chime at {now:HH:mm}");
+            _animationService?.PlaySequence(new List<Gestures> { Gestures.Greet });
             _notificationService.ShowNotification($"It's {now:hh tt}!");
             _activityMonitor?.ReportActivity();
         }

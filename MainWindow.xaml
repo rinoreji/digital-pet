@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DigitalPetApp"
+    xmlns:h="clr-namespace:DigitalPetApp.Helpers"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="Digital Pet"
@@ -23,11 +24,11 @@
          VerticalAlignment="Bottom"
          HorizontalAlignment="Left"
          Margin="0"
-         MouseLeftButtonUp="DogImage_Click"/>
+         h:ClickCommandBehavior.ClickCommand="{Binding PetClickedCommand}"/>
     </Grid>
     <Window.ContextMenu>
         <ContextMenu>
-            <MenuItem Header="Exit" Click="ExitMenuItem_Click"/>
+            <MenuItem Header="Exit" Command="{Binding ExitCommand}"/>
         </ContextMenu>
     </Window.ContextMenu>
 </Window>

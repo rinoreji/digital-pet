@@ -7,15 +7,17 @@ using System.Windows.Threading;
 
 namespace DigitalPetApp.Helpers
 {
+     [Obsolete("Use IAnimationService via dependency injection instead.")]
     public static class AnimationHelper
-    {
-        // Plays a sequence of animations in order, updating the given Image control
-    private static AgentAnimationLoader? _animationLoader;
-    private static RoverSoundLoader? _soundLoader;
-    private static Image? _imageControl;
-    private static string? _spriteSheetPath;
-    private static int _frameWidth;
-    private static int _frameHeight;
+        {
+            // Transitional shim: prefer IAnimationService (SpriteSheetAnimationService) going forward.
+        private static AgentAnimationLoader? _animationLoader;
+        private static RoverSoundLoader? _soundLoader;
+        private static Image? _imageControl;
+        private static string? _spriteSheetPath;
+        private static int _frameWidth;
+        private static int _frameHeight;
+            private static DigitalPetApp.Services.IAnimationService? _animationService;
 
         public static void Init(
             AgentAnimationLoader animationLoader,
@@ -33,8 +35,18 @@ namespace DigitalPetApp.Helpers
             _frameHeight = frameHeight;
         }
 
+        public static void UseAnimationService(DigitalPetApp.Services.IAnimationService animationService)
+        {
+            _animationService = animationService;
+        }
+
         public static void PlayAnimationSequence(IEnumerable<Gestures> gestures)
         {
+            if (_animationService != null)
+            {
+                _animationService.PlaySequence(gestures);
+                return;
+            }
             if (_animationLoader == null) throw new InvalidOperationException("AnimationHelper not initialized. Call Init first.");
             if (_soundLoader == null) throw new InvalidOperationException("AnimationHelper not initialized. Call Init first.");
             if (_imageControl == null) throw new InvalidOperationException("AnimationHelper not initialized. Call Init first.");

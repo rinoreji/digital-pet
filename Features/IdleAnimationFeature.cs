@@ -13,8 +13,10 @@ namespace DigitalPetApp.Features
 {
     public class IdleAnimationFeature : IAgentFeature
     {
-        private readonly ActivityMonitor _activityMonitor;
-        private readonly AgentTimerService _timerService;
+    private readonly ActivityMonitor _activityMonitor;
+    private readonly AgentTimerService _timerService;
+    private readonly Services.IAnimationService? _animationService;
+    private readonly Services.ILoggingService? _logger;
         private static readonly Random _rng = new();
         // Small set of candidate gestures to use when idle happens
         private static readonly Gestures[] _idleGesturePool = new[]
@@ -54,10 +56,12 @@ namespace DigitalPetApp.Features
             Gestures.Pleased
         };
 
-        public IdleAnimationFeature(ActivityMonitor activityMonitor, AgentTimerService timerService)
+        public IdleAnimationFeature(ActivityMonitor activityMonitor, AgentTimerService timerService, Services.IAnimationService? animationService = null, Services.ILoggingService? logger = null)
         {
             _activityMonitor = activityMonitor ?? throw new ArgumentNullException(nameof(activityMonitor));
             _timerService = timerService ?? throw new ArgumentNullException(nameof(timerService));
+            _animationService = animationService;
+            _logger = logger;
         }
 
         public void Initialize()
@@ -84,7 +88,7 @@ namespace DigitalPetApp.Features
 
         private void OnIdleStarted()
         {
-            Debug.WriteLine("Idle started");
+            _logger?.Info("Idle started");
             // Play 1-2 random idle gestures from the pool
             try
             {
@@ -103,7 +107,7 @@ namespace DigitalPetApp.Features
                     }
                 }
                 Debug.WriteLine($"   ============>   Playing idle gestures: {string.Join(", ", chosen)}");
-                AnimationHelper.PlayAnimationSequence(chosen);
+                _animationService?.PlaySequence(chosen);
                 _activityMonitor.ReportActivity(); // Report activity to reset idle timer
             }
             catch

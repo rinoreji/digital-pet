@@ -55,10 +55,16 @@ A playful recreation of Microsoft Agent Rover — built with the help of GitHub 
 - Add new features: Implement `IAgentFeature` and register with `FeatureManager`.
 
 ## 🗂️ Project Structure
-- `MainWindow.xaml` / `.cs`: Main UI and logic
-- `Assets/`: Images, animation data, and sound assets
-- `FeatureManager.cs`: Feature registration and management
-- `AnimationHelper.cs`, `SoundPlayerHelper.cs`: Animation and sound utilities
+Updated (refactored) high-level layout:
+- `Views/`: WPF XAML windows (`MainWindow`, `BalloonNotificationWindow`)
+- `ViewModels/`: MVVM view models (`MainViewModel`)
+- `Models/`: Data models for animations and frames
+- `Services/`: Core services (animation, sound, notifications, timers, feature host, UI settings)
+- `Features/`: Modular feature implementations (reminder, idle animations, hourly chime)
+- `Helpers/`: Transitional helpers (loaders, legacy `AnimationHelper` shim)
+- `Assets/`: Images, animation JSON, sound JSON
+
+Legacy `FeatureManager` kept temporarily (marked obsolete) → use `FeatureHost` moving forward.
 
 ## 🤝 Contributing
 Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.

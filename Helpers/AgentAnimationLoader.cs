@@ -1,32 +1,11 @@
 using System.IO;
 using System.Text.Json;
+using DigitalPetApp.Models;
 
 namespace DigitalPetApp.Helpers
 {
     public class AgentAnimationLoader
     {
-
-        public class AnimationRoot
-        {
-            public int OverlayCount { get; set; }
-            public List<string> Sounds { get; set; }
-            public List<int> Framesize { get; set; }
-            public Dictionary<string, Animation> Animations { get; set; }
-        }
-
-        public class Animation
-        {
-            public List<Frame> Frames { get; set; }
-        }
-
-        public class Frame
-        {
-            public int Duration { get; set; }
-            public List<List<int>> Images { get; set; }
-            public string Sound { get; set; } // Optional, may be null
-        }
-
-
         public Dictionary<string, Animation> Animations { get; } = new();
 
         public AgentAnimationLoader(string jsonFilePath)

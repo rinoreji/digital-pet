@@ -9,7 +9,7 @@ namespace DigitalPetApp.Features
     private readonly AgentTimerService _timerService;
     private readonly Services.IAnimationService? _animationService;
     private readonly Services.ActivityMonitor? _activityMonitor;
-        private readonly int _intervalMinutes;
+    private int _intervalMinutes;
         private int _minuteCounter = 0;
         private string _reminderText = "Time for a break!";
     private readonly Services.ILoggingService? _logger;
@@ -57,6 +57,14 @@ namespace DigitalPetApp.Features
             _notificationService.ShowNotification(_reminderText, "Reminder");
             _animationService?.PlaySequence(new System.Collections.Generic.List<Gestures> { Gestures.GetAttention });
             _activityMonitor?.ReportActivity();
+        }
+
+        public void UpdateInterval(int minutes)
+        {
+            if (minutes <= 0) return;
+            _intervalMinutes = minutes;
+            _minuteCounter = 0; // reset so new interval counts fresh
+            _logger?.Info($"Reminder interval updated to {minutes} minutes");
         }
     }
 }

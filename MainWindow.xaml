@@ -38,6 +38,7 @@
                     </Style>
                 </MenuItem.ItemContainerStyle>
             </MenuItem>
+            <MenuItem Header="Settings" Command="{Binding OpenSettingsCommand}"/>
             <MenuItem Header="Exit" Command="{Binding ExitCommand}"/>
         </ContextMenu>
     </Window.ContextMenu>

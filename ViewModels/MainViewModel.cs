@@ -14,16 +14,21 @@ public class MainViewModel
 
     public ICommand PetClickedCommand { get; }
     public ICommand ExitCommand { get; }
+    public ICommand OpenSettingsCommand { get; }
     public ObservableCollection<FeatureToggleViewModel> Features { get; } = new();
 
-    public MainViewModel(IAnimationService animationService, INotificationService notificationService, ISettingsService? settingsService = null, IFeatureHost? featureHost = null)
+    private readonly ActivityMonitor? activityMonitor;
+
+    public MainViewModel(IAnimationService animationService, INotificationService notificationService, ISettingsService? settingsService = null, IFeatureHost? featureHost = null, ActivityMonitor? activityMonitor = null)
     {
         this.animationService = animationService;
         this.notificationService = notificationService;
         this.settingsService = settingsService;
         this.featureHost = featureHost;
-        PetClickedCommand = new RelayCommand(_ => OnPetClicked());
-        ExitCommand = new RelayCommand(_ => OnExit());
+        this.activityMonitor = activityMonitor;
+    PetClickedCommand = new RelayCommand(_ => OnPetClicked());
+    ExitCommand = new RelayCommand(_ => OnExit());
+    OpenSettingsCommand = new RelayCommand(_ => OnOpenSettings());
         if (featureHost != null)
         {
             foreach (var f in featureHost.GetTogglableFeatures())
@@ -48,6 +53,18 @@ public class MainViewModel
     private void OnExit()
     {
         System.Windows.Application.Current.Shutdown();
+    }
+
+    private void OnOpenSettings()
+    {
+        if (settingsService == null || featureHost == null) return;
+        // Find existing
+        var existing = System.Windows.Application.Current.Windows.OfType<System.Windows.Window>().FirstOrDefault(w => w is Views.SettingsWindow);
+        if (existing != null) { existing.Activate(); return; }
+        var mainWin = System.Windows.Application.Current.MainWindow;
+    var vm = new SettingsViewModel(settingsService, featureHost, activityMonitor!);
+        var win = new Views.SettingsWindow { DataContext = vm, Owner = mainWin };
+        win.Show();
     }
 
     private void ToggleFeature(string key)

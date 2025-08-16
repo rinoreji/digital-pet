@@ -78,7 +78,7 @@ namespace DigitalPetApp
             featureHost.RegisterFeature("IdleAnimation", idle, start: idle.IsEnabled);
 
             // Now create ViewModel which will populate Features collection
-            viewModel = new ViewModels.MainViewModel(animationService, notificationService, settingsService, featureHost);
+            viewModel = new ViewModels.MainViewModel(animationService, notificationService, settingsService, featureHost, monitor);
             this.DataContext = viewModel;
 
             // Play default animation on startup (UI only)

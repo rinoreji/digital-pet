@@ -13,12 +13,13 @@ namespace DigitalPetApp.Services
         public event Action? IdleStarted;
         public event Action? IdleEnded;
 
-        public TimeSpan IdleThreshold { get; }
+    private TimeSpan _idleThreshold;
+    public TimeSpan IdleThreshold => _idleThreshold;
 
         public ActivityMonitor(AgentTimerService timerService, int idleSeconds = 180)
         {
             _timerService = timerService ?? throw new ArgumentNullException(nameof(timerService));
-            IdleThreshold = TimeSpan.FromSeconds(idleSeconds);
+            _idleThreshold = TimeSpan.FromSeconds(idleSeconds);
             _lastActivity = DateTime.Now;
 
             // Listen to the shared timer so we can evaluate idle state regularly
@@ -51,10 +52,31 @@ namespace DigitalPetApp.Services
         {
             lock (_lock)
             {
-                if (!_isIdle && (DateTime.Now - _lastActivity) >= IdleThreshold)
+                if (!_isIdle && (DateTime.Now - _lastActivity) >= _idleThreshold)
                 {
                     _isIdle = true;
                     IdleStarted?.Invoke();
+                }
+            }
+        }
+
+        public void UpdateIdleThreshold(int seconds)
+        {
+            if (seconds <= 0) return;
+            lock (_lock)
+            {
+                _idleThreshold = TimeSpan.FromSeconds(seconds);
+                // Re-evaluate immediately: if already beyond new shorter threshold trigger idle; if longer and currently idle, resume.
+                var elapsed = DateTime.Now - _lastActivity;
+                if (!_isIdle && elapsed >= _idleThreshold)
+                {
+                    _isIdle = true;
+                    IdleStarted?.Invoke();
+                }
+                else if (_isIdle && elapsed < _idleThreshold)
+                {
+                    _isIdle = false;
+                    IdleEnded?.Invoke();
                 }
             }
         }

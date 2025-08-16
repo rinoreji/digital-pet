@@ -3,7 +3,7 @@ using DigitalPetApp.Services;
 
 namespace DigitalPetApp.Features
 {
-    public class ReminderFeature : IAgentFeature
+    public class ReminderFeature : ITogglableFeature
     {
     private readonly INotificationService _notificationService;
     private readonly AgentTimerService _timerService;
@@ -14,7 +14,11 @@ namespace DigitalPetApp.Features
         private string _reminderText = "Time for a break!";
     private readonly Services.ILoggingService? _logger;
 
-        public ReminderFeature(INotificationService notificationService, AgentTimerService timerService, int intervalMinutes = 30, Services.ActivityMonitor? activityMonitor = null, Services.IAnimationService? animationService = null, Services.ILoggingService? logger = null)
+    public string Key => "Reminder";
+    public string DisplayName => "Reminder";
+    public bool IsEnabled { get; set; } = true;
+
+    public ReminderFeature(INotificationService notificationService, AgentTimerService timerService, int intervalMinutes = 30, Services.ActivityMonitor? activityMonitor = null, Services.IAnimationService? animationService = null, Services.ILoggingService? logger = null)
         {
             _notificationService = notificationService;
             _timerService = timerService;
@@ -29,15 +33,8 @@ namespace DigitalPetApp.Features
             // No initialization needed
         }
 
-        public void Start()
-        {
-            _timerService.MinuteTick += OnMinuteTick;
-        }
-
-        public void Stop()
-        {
-            _timerService.MinuteTick -= OnMinuteTick;
-        }
+    public void Start() { if (IsEnabled) _timerService.SecondTick += OnMinuteTick; }
+    public void Stop() { _timerService.SecondTick -= OnMinuteTick; }
 
         public void Update()
         {

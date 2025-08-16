@@ -20,7 +20,7 @@ namespace DigitalPetApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly Services.FeatureHost featureHost = new Services.FeatureHost();
+    private readonly Services.FeatureHost featureHost = new Services.FeatureHost();
         private readonly BalloonNotificationService notificationService;
         private readonly AgentTimerService timerService = new AgentTimerService();
         private readonly ActivityMonitor? activityMonitor;
@@ -62,18 +62,22 @@ namespace DigitalPetApp
             Services.ServiceRegistry.Register<Services.IAnimationService>(animationService);
             Services.ServiceRegistry.Register<Services.INotificationService>(notificationService = new BalloonNotificationService());
             Services.ServiceRegistry.Register<Services.ILoggingService>(logger);
-            viewModel = new ViewModels.MainViewModel(animationService, notificationService);
-            this.DataContext = viewModel;
 
-            // Register features (reminder, notifications, idle animation, etc.)
-            // Create ActivityMonitor using shared timer; idle threshold 60s (configurable)
+            // Create ActivityMonitor using shared timer; idle threshold from settings
             var monitor = new ActivityMonitor(timerService, idleSeconds: settingsService.Current.IdleTimeoutSeconds);
             this.activityMonitor = monitor;
 
-            // Register features, passing the activity monitor so they can report activity
-            featureHost.RegisterFeature(new ReminderFeature(notificationService, timerService, intervalMinutes: settingsService.Current.ReminderIntervalMinutes, activityMonitor: monitor, animationService: animationService, logger: logger));
-            featureHost.RegisterFeature(new HourlyChimeFeature(notificationService, timerService, monitor, animationService, logger));
-            featureHost.RegisterFeature(new IdleAnimationFeature(monitor, timerService, animationService, logger));
+            // Register features before creating ViewModel so it can enumerate them
+            var reminder = new ReminderFeature(notificationService, timerService, intervalMinutes: settingsService.Current.ReminderIntervalMinutes, activityMonitor: monitor, animationService: animationService, logger: logger) { IsEnabled = settingsService.Current.EnableReminder };
+            var chime = new HourlyChimeFeature(notificationService, timerService, monitor, animationService, logger) { IsEnabled = settingsService.Current.EnableHourlyChime };
+            var idle = new IdleAnimationFeature(monitor, timerService, animationService, logger) { IsEnabled = settingsService.Current.EnableIdleAnimation };
+            featureHost.RegisterFeature("Reminder", reminder, start: reminder.IsEnabled);
+            featureHost.RegisterFeature("HourlyChime", chime, start: chime.IsEnabled);
+            featureHost.RegisterFeature("IdleAnimation", idle, start: idle.IsEnabled);
+
+            // Now create ViewModel which will populate Features collection
+            viewModel = new ViewModels.MainViewModel(animationService, notificationService, settingsService, featureHost);
+            this.DataContext = viewModel;
 
             // Play default animation on startup (UI only)
             viewModel.PlayStartupAnimation();
@@ -84,6 +88,8 @@ namespace DigitalPetApp
             base.OnClosed(e);
             timerService.Dispose();
             activityMonitor?.Dispose();
+            // Persist changes only if dirty (already tracked)
+            settingsService.SaveIfDirty();
         }
 
     // Event handlers removed in favor of command bindings.

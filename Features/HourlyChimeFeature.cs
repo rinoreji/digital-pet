@@ -5,7 +5,7 @@ using DigitalPetApp.Services;
 
 namespace DigitalPetApp.Features
 {
-    public class HourlyChimeFeature : IAgentFeature
+    public class HourlyChimeFeature : ITogglableFeature
     {
     private readonly INotificationService _notificationService;
     private readonly AgentTimerService _timerService;
@@ -13,7 +13,11 @@ namespace DigitalPetApp.Features
     private readonly Services.IAnimationService? _animationService;
     private readonly Services.ILoggingService? _logger;
 
-        public HourlyChimeFeature(INotificationService notificationService, AgentTimerService timerService, ActivityMonitor? activityMonitor = null, Services.IAnimationService? animationService = null, Services.ILoggingService? logger = null)
+    public string Key => "HourlyChime";
+    public string DisplayName => "Hourly Chime";
+    public bool IsEnabled { get; set; } = true;
+
+    public HourlyChimeFeature(INotificationService notificationService, AgentTimerService timerService, ActivityMonitor? activityMonitor = null, Services.IAnimationService? animationService = null, Services.ILoggingService? logger = null)
         {
             _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
             _timerService = timerService ?? throw new ArgumentNullException(nameof(timerService));
@@ -27,15 +31,8 @@ namespace DigitalPetApp.Features
             // No initialization needed for this feature
         }
 
-        public void Start()
-        {
-            _timerService.HourTick += OnHourTick;
-        }
-
-        public void Stop()
-        {
-            _timerService.HourTick -= OnHourTick;
-        }
+    public void Start() { if (IsEnabled) _timerService.HourTick += OnHourTick; }
+    public void Stop() { _timerService.HourTick -= OnHourTick; }
 
         public void Update()
         {

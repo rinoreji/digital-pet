@@ -14,6 +14,7 @@ public class SettingsService : ISettingsService
 {
     private readonly string settingsPath;
     public AppSettings Current { get; private set; } = new();
+    private string? _lastSerialized; // for dirty tracking
 
     public SettingsService(string? customPath = null)
     {
@@ -40,9 +41,17 @@ public class SettingsService : ISettingsService
     {
         try
         {
-            var json = JsonSerializer.Serialize(Current, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(settingsPath, json);
+        var json = JsonSerializer.Serialize(Current, new JsonSerializerOptions { WriteIndented = true });
+        if (_lastSerialized == json) return; // no changes
+        File.WriteAllText(settingsPath, json);
+        _lastSerialized = json;
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine($"[SettingsService] Saved settings to {settingsPath}: {json}");
+#endif
         }
         catch { }
     }
+
+    // Explicit conditional save helper
+    public void SaveIfDirty() => Save();
 }

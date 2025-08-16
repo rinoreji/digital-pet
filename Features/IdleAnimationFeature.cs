@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace DigitalPetApp.Features
 {
-    public class IdleAnimationFeature : IAgentFeature
+    public class IdleAnimationFeature : ITogglableFeature
     {
     private readonly ActivityMonitor _activityMonitor;
     private readonly AgentTimerService _timerService;
@@ -56,7 +56,11 @@ namespace DigitalPetApp.Features
             Gestures.Pleased
         };
 
-        public IdleAnimationFeature(ActivityMonitor activityMonitor, AgentTimerService timerService, Services.IAnimationService? animationService = null, Services.ILoggingService? logger = null)
+    public string Key => "IdleAnimation";
+    public string DisplayName => "Idle Animation";
+    public bool IsEnabled { get; set; } = true;
+
+    public IdleAnimationFeature(ActivityMonitor activityMonitor, AgentTimerService timerService, Services.IAnimationService? animationService = null, Services.ILoggingService? logger = null)
         {
             _activityMonitor = activityMonitor ?? throw new ArgumentNullException(nameof(activityMonitor));
             _timerService = timerService ?? throw new ArgumentNullException(nameof(timerService));
@@ -71,6 +75,7 @@ namespace DigitalPetApp.Features
 
         public void Start()
         {
+            if (!IsEnabled) return;
             _activityMonitor.IdleStarted += OnIdleStarted;
             _activityMonitor.IdleEnded += OnIdleEnded;
         }

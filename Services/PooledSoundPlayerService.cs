@@ -9,6 +9,8 @@ namespace DigitalPetApp.Services;
 public interface ISoundPlayerService
 {
     void PlayDataUrl(string? dataUrl);
+    double Volume { get; set; }
+    bool Muted { get; set; }
 }
 
 public class PooledSoundPlayerService : ISoundPlayerService, IDisposable
@@ -17,6 +19,8 @@ public class PooledSoundPlayerService : ISoundPlayerService, IDisposable
     private readonly ConcurrentDictionary<string,string> cachedFiles = new();
     private readonly ConcurrentBag<MediaPlayer> pool = new();
     private readonly int poolSize;
+    private double volume = 0.8; // default
+    private bool muted = false;
 
     public PooledSoundPlayerService(int poolSize = 3)
     {
@@ -42,7 +46,11 @@ public class PooledSoundPlayerService : ISoundPlayerService, IDisposable
             var player = GetPlayer();
             player.Open(new Uri(file));
             player.MediaEnded += OnEnded;
-            player.Play();
+            if (!muted)
+            {
+                player.Volume = volume;
+                player.Play();
+            }
 
             void OnEnded(object? s, EventArgs e)
             {
@@ -59,6 +67,9 @@ public class PooledSoundPlayerService : ISoundPlayerService, IDisposable
         if (!pool.TryTake(out var p)) p = new MediaPlayer();
         return p;
     }
+
+    public double Volume { get => volume; set { volume = Math.Clamp(value, 0, 1); } }
+    public bool Muted { get => muted; set { muted = value; } }
 
     private void ReturnPlayer(MediaPlayer p)
     {

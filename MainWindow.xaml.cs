@@ -27,7 +27,8 @@ namespace DigitalPetApp
     private readonly ViewModels.MainViewModel viewModel;
     private readonly SettingsService settingsService = new SettingsService();
         private readonly AgentAnimationLoader animationLoader;
-        private readonly RoverSoundLoader soundLoader;
+    private readonly RoverSoundLoader soundLoader;
+    private readonly PooledSoundPlayerService soundPlayer;
     private readonly TrayIconService trayIcon;
 
         public MainWindow()
@@ -39,10 +40,18 @@ namespace DigitalPetApp
             this.Width = Services.UISettings.WindowWidth;
             this.Height = Services.UISettings.WindowHeight;
 
-            // Position window above taskbar (bottom right)
-            var desktopWorkingArea = SystemParameters.WorkArea;
-            this.Left = desktopWorkingArea.Right - this.Width;
-            this.Top = desktopWorkingArea.Bottom - this.Height;
+            // Position window using stored settings or default bottom-right
+            if (settingsService.Current.WindowLeft.HasValue && settingsService.Current.WindowTop.HasValue)
+            {
+                this.Left = settingsService.Current.WindowLeft.Value;
+                this.Top = settingsService.Current.WindowTop.Value;
+            }
+            else
+            {
+                var desktopWorkingArea = SystemParameters.WorkArea;
+                this.Left = desktopWorkingArea.Right - this.Width;
+                this.Top = desktopWorkingArea.Bottom - this.Height;
+            }
 
             // Initialize animation and sound loaders
             var exeDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
@@ -52,7 +61,9 @@ namespace DigitalPetApp
             soundLoader = new RoverSoundLoader(soundJsonPath);
 
             // Animation service initialized (legacy AnimationHelper removed)
-            var soundPlayer = new PooledSoundPlayerService();
+            soundPlayer = new PooledSoundPlayerService();
+            soundPlayer.Volume = settingsService.Current.Volume;
+            soundPlayer.Muted = settingsService.Current.Muted;
             var animationService = new Services.SpriteSheetAnimationService(
                 animationLoader,
                 soundLoader,
@@ -63,6 +74,7 @@ namespace DigitalPetApp
                 soundPlayer);
             var logger = new FileLoggingService();
             Services.ServiceRegistry.Register<Services.IAnimationService>(animationService);
+            Services.ServiceRegistry.Register<Services.ISoundPlayerService>(soundPlayer);
             Services.ServiceRegistry.Register<Services.INotificationService>(notificationService = new BalloonNotificationService());
             Services.ServiceRegistry.Register<Services.ILoggingService>(logger);
 
@@ -99,6 +111,11 @@ namespace DigitalPetApp
             activityMonitor?.Dispose();
             trayIcon.Dispose();
             // Persist changes only if dirty (already tracked)
+            // Persist window position and audio settings (latest in case adjusted elsewhere)
+            settingsService.Current.WindowLeft = this.Left;
+            settingsService.Current.WindowTop = this.Top;
+            settingsService.Current.Volume = soundPlayer.Volume;
+            settingsService.Current.Muted = soundPlayer.Muted;
             settingsService.SaveIfDirty();
         }
     }

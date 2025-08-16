@@ -24,6 +24,8 @@ public class SettingsViewModel : INotifyPropertyChanged
         enableHourlyChime = settingsService.Current.EnableHourlyChime;
         enableIdleAnimation = settingsService.Current.EnableIdleAnimation;
     enableRandomTrick = settingsService.Current.EnableRandomTrick;
+    volume = settingsService.Current.Volume;
+    muted = settingsService.Current.Muted;
     SaveCommand = new RelayCommand(_ => Save());
     CancelCommand = new RelayCommand(_ => CloseWindow());
     }
@@ -43,6 +45,12 @@ public class SettingsViewModel : INotifyPropertyChanged
     private bool enableRandomTrick;
     public bool EnableRandomTrick { get => enableRandomTrick; set { if (value!=enableRandomTrick){ enableRandomTrick=value; OnPropertyChanged(); } } }
 
+    private double volume;
+    public double Volume { get => volume; set { var v = Math.Clamp(value,0,1); if (Math.Abs(v-volume) > 0.0001){ volume=v; OnPropertyChanged(); } } }
+
+    private bool muted;
+    public bool Muted { get => muted; set { if (value!=muted){ muted=value; OnPropertyChanged(); } } }
+
     public ICommand SaveCommand { get; }
     public ICommand CancelCommand { get; }
 
@@ -54,7 +62,17 @@ public class SettingsViewModel : INotifyPropertyChanged
         settingsService.Current.EnableHourlyChime = EnableHourlyChime;
         settingsService.Current.EnableIdleAnimation = EnableIdleAnimation;
     settingsService.Current.EnableRandomTrick = EnableRandomTrick;
+    settingsService.Current.Volume = Volume;
+    settingsService.Current.Muted = Muted;
         settingsService.Save();
+        // Apply audio settings live if service available
+        try
+        {
+            var sp = Services.ServiceRegistry.Resolve<Services.ISoundPlayerService>();
+            sp.Volume = Volume;
+            sp.Muted = Muted;
+        }
+        catch { }
         // Apply feature enable status live
         featureHost.SetEnabled("Reminder", EnableReminder);
         featureHost.SetEnabled("HourlyChime", EnableHourlyChime);

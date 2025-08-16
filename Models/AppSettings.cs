@@ -9,4 +9,10 @@ public class AppSettings
     public bool EnableHourlyChime { get; set; } = true;
     public bool EnableIdleAnimation { get; set; } = true;
     public bool EnableRandomTrick { get; set; } = true;
+    // Audio
+    public double Volume { get; set; } = 0.8; // 0..1
+    public bool Muted { get; set; } = false;
+    // Window position
+    public double? WindowLeft { get; set; }
+    public double? WindowTop { get; set; }
 }

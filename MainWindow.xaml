@@ -12,7 +12,8 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Height="{DynamicResource WindowSize}"
-        Width="{DynamicResource WindowSize}">
+    Width="{DynamicResource WindowSize}"
+    MouseLeftButtonDown="Window_MouseLeftButtonDown">
     <Window.Resources>
         <sys:Double x:Key="WindowSize">100</sys:Double>
         <sys:Double x:Key="SpriteFrameSize">80</sys:Double>
@@ -23,8 +24,7 @@
          Height="{DynamicResource SpriteFrameSize}"
          VerticalAlignment="Bottom"
          HorizontalAlignment="Left"
-         Margin="0"
-         h:ClickCommandBehavior.ClickCommand="{Binding PetClickedCommand}"/>
+         Margin="0"/>
     </Grid>
     <Window.ContextMenu>
         <ContextMenu>

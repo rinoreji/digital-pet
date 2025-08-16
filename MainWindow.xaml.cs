@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
 
 namespace DigitalPetApp
 {
@@ -118,5 +119,28 @@ namespace DigitalPetApp
             settingsService.Current.Muted = soundPlayer.Muted;
             settingsService.SaveIfDirty();
         }
+
+        // Simplified drag-or-click (single handler)
+        private DateTime _mouseDownTime;
+        private System.Windows.Point _mouseDownPos;
+        private const double DragThreshold = 6; // px
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            _mouseDownTime = DateTime.Now;
+            _mouseDownPos = e.GetPosition(this);
+            var wasLeft = this.Left; var wasTop = this.Top;
+            try { this.DragMove(); } catch { }
+            // If position changed, save & treat as drag
+            if (Math.Abs(this.Left - wasLeft) > 0.5 || Math.Abs(this.Top - wasTop) > 0.5)
+            {
+                settingsService.Current.WindowLeft = this.Left;
+                settingsService.Current.WindowTop = this.Top;
+                settingsService.SaveIfDirty();
+                return; // drag consumed
+            }
+            // Otherwise treat as click (quick & small movement)
+            if (viewModel.PetClickedCommand.CanExecute(null)) viewModel.PetClickedCommand.Execute(null);
+        }
+
     }
 }

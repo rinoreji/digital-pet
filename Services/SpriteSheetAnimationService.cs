@@ -11,6 +11,7 @@ public class SpriteSheetAnimationService : IAnimationService
     private readonly AgentAnimationLoader animationLoader;
     private readonly RoverSoundLoader soundLoader;
     private readonly Image imageControl;
+    private readonly ISoundPlayerService? soundPlayer;
     private readonly string spriteSheetPath;
     private readonly int frameWidth;
     private readonly int frameHeight;
@@ -21,7 +22,8 @@ public class SpriteSheetAnimationService : IAnimationService
         Image imageControl,
         string spriteSheetPath,
         int frameWidth,
-        int frameHeight)
+    int frameHeight,
+    ISoundPlayerService? soundPlayer = null)
     {
         this.animationLoader = animationLoader;
         this.soundLoader = soundLoader;
@@ -29,6 +31,7 @@ public class SpriteSheetAnimationService : IAnimationService
         this.spriteSheetPath = spriteSheetPath;
         this.frameWidth = frameWidth;
         this.frameHeight = frameHeight;
+    this.soundPlayer = soundPlayer;
     }
 
     public void PlaySequence(IEnumerable<Gestures> gestures)
@@ -82,10 +85,7 @@ public class SpriteSheetAnimationService : IAnimationService
             if (!string.IsNullOrEmpty(sound))
             {
                 var dataUrl = soundLoader.GetSoundDataUrl(sound);
-                if (!string.IsNullOrEmpty(dataUrl))
-                {
-                    Helpers.SoundPlayerHelper.PlayDataUrl(dataUrl);
-                }
+                if (!string.IsNullOrEmpty(dataUrl)) soundPlayer?.PlayDataUrl(dataUrl);
             }
             currentFrame++;
             if (currentFrame >= frames.Count)

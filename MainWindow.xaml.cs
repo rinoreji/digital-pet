@@ -51,13 +51,15 @@ namespace DigitalPetApp
             soundLoader = new RoverSoundLoader(soundJsonPath);
 
             // Animation service initialized (legacy AnimationHelper removed)
+            var soundPlayer = new PooledSoundPlayerService();
             var animationService = new Services.SpriteSheetAnimationService(
                 animationLoader,
                 soundLoader,
                 DogImage,
                 "pack://application:,,,/Assets/rover/map.png",
                 Services.UISettings.SpriteFrameWidth,
-                Services.UISettings.SpriteFrameHeight);
+                Services.UISettings.SpriteFrameHeight,
+                soundPlayer);
             var logger = new FileLoggingService();
             Services.ServiceRegistry.Register<Services.IAnimationService>(animationService);
             Services.ServiceRegistry.Register<Services.INotificationService>(notificationService = new BalloonNotificationService());

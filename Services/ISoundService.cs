@@ -1,6 +1,3 @@
 namespace DigitalPetApp.Services;
 
-public interface ISoundService
-{
-    void PlayDataUrl(string? dataUrl);
-}
+[System.Obsolete("Use ISoundPlayerService / PooledSoundPlayerService instead")] public interface ISoundService { void PlayDataUrl(string? dataUrl); }

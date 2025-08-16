@@ -15,13 +15,13 @@ namespace DigitalPetApp.Services
 
         public void ShowNotification(string message, string title = "Notification")
         {
-            Application.Current.Dispatcher.Invoke(() =>
+        System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
                 var balloon = new BalloonNotificationWindow(message, title);
                 balloon.Show();
                 balloon.Dispatcher.InvokeAsync(() =>
                 {
-                    var mainWindow = Application.Current.MainWindow as Window;
+            var mainWindow = System.Windows.Application.Current.MainWindow as System.Windows.Window;
                     FrameworkElement? anchor = null;
                     if (mainWindow != null)
                     {

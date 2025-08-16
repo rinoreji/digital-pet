@@ -8,7 +8,7 @@ public class BalloonPositionService : IBalloonPositionService
     {
         if (anchorElement != null)
         {
-            var point = anchorElement.PointToScreen(new Point(0, 0));
+            var point = anchorElement.PointToScreen(new System.Windows.Point(0, 0));
             var source = PresentationSource.FromVisual(anchorElement);
             double dpiX = 1.0, dpiY = 1.0;
             if (source != null)

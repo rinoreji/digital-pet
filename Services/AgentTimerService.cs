@@ -5,7 +5,7 @@ namespace DigitalPetApp.Services
 {
     public class AgentTimerService : IDisposable
     {
-        private Timer? _timer;
+    private System.Threading.Timer? _timer;
         private DateTime _lastMinute = DateTime.MinValue;
         private DateTime _lastHour = DateTime.MinValue;
 
@@ -15,7 +15,7 @@ namespace DigitalPetApp.Services
 
         public AgentTimerService()
         {
-            _timer = new Timer(OnTick, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+            _timer = new System.Threading.Timer(OnTick, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
         }
 
         private void OnTick(object? state)

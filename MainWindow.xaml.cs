@@ -28,6 +28,7 @@ namespace DigitalPetApp
     private readonly SettingsService settingsService = new SettingsService();
         private readonly AgentAnimationLoader animationLoader;
         private readonly RoverSoundLoader soundLoader;
+    private readonly TrayIconService trayIcon;
 
         public MainWindow()
         {
@@ -81,6 +82,10 @@ namespace DigitalPetApp
             viewModel = new ViewModels.MainViewModel(animationService, notificationService, settingsService, featureHost, monitor);
             this.DataContext = viewModel;
 
+            // Tray icon
+            trayIcon = new TrayIconService(this, () => viewModel.OpenSettingsCommand.Execute(null));
+            trayIcon.Show();
+
             // Play default animation on startup (UI only)
             viewModel.PlayStartupAnimation();
         }
@@ -90,10 +95,9 @@ namespace DigitalPetApp
             base.OnClosed(e);
             timerService.Dispose();
             activityMonitor?.Dispose();
+            trayIcon.Dispose();
             // Persist changes only if dirty (already tracked)
             settingsService.SaveIfDirty();
         }
-
-    // Event handlers removed in favor of command bindings.
     }
 }

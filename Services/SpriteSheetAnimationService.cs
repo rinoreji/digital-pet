@@ -10,7 +10,7 @@ public class SpriteSheetAnimationService : IAnimationService
 {
     private readonly AgentAnimationLoader animationLoader;
     private readonly RoverSoundLoader soundLoader;
-    private readonly Image imageControl;
+    private readonly System.Windows.Controls.Image imageControl;
     private readonly ISoundPlayerService? soundPlayer;
     private readonly string spriteSheetPath;
     private readonly int frameWidth;
@@ -19,7 +19,7 @@ public class SpriteSheetAnimationService : IAnimationService
     public SpriteSheetAnimationService(
         AgentAnimationLoader animationLoader,
         RoverSoundLoader soundLoader,
-        Image imageControl,
+    System.Windows.Controls.Image imageControl,
         string spriteSheetPath,
         int frameWidth,
     int frameHeight,

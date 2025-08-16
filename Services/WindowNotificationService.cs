@@ -6,7 +6,7 @@ namespace DigitalPetApp.Services
     {
         public void ShowNotification(string message, string title = "Notification")
         {
-            MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information);
+            System.Windows.MessageBox.Show(message, title, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
         }
     }
 }

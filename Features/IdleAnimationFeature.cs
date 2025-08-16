@@ -78,6 +78,11 @@ namespace DigitalPetApp.Features
             if (!IsEnabled) return;
             _activityMonitor.IdleStarted += OnIdleStarted;
             _activityMonitor.IdleEnded += OnIdleEnded;
+            // If feature is re-enabled while the system is already idle, fire immediately
+            if (_activityMonitor.IsIdle)
+            {
+                OnIdleStarted();
+            }
         }
 
         public void Stop()

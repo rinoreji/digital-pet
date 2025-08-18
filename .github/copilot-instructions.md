@@ -37,10 +37,19 @@ This project is a C# WPF desktop application for a digital pet. Focus on lightwe
 - Use Copilot to write unit tests for services and ViewModels.
 
 ## Known Issues
-- Navigation between views is currently manual; consider implementing a navigation service.
+- Navigation between views is currently manual; consider implementing a navigation service if more windows/pages are added.
 - Some bindings may break if property names are changed without updating the XAML.
+- Reminder feature currently counts seconds rather than true minutes (interval naming mismatch).
+
+## Implemented
+- Centralized file logging service (`FileLoggingService`).
+- Feature modularity via `FeatureHost` and `ITogglableFeature`.
+- Sound pooling (`PooledSoundPlayerService`).
 
 ## Future Enhancements
-- Implement a centralized logging service.
+- Fix reminder interval (switch to minute-based or rename setting & UI label).
 - Add localization support.
-- Improve accessibility features.
+- Improve accessibility features (keyboard navigation, high contrast assets, screen reader text for notifications).
+- Add unit tests for timer-driven features (ActivityMonitor, Reminder, RandomTrick).
+- Provide a plugin discovery pattern or dynamic feature loading.
+- Remove obsolete empty helpers (`AnimationHelper`, legacy `FeatureManager`) after documentation alignment.

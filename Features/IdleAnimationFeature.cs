@@ -130,10 +130,7 @@ namespace DigitalPetApp.Features
         private void OnIdleEnded()
         {
             // Optionally play a small resume animation
-            try
-            {
-                //AnimationHelper.PlayAnimationSequence(new List<Gestures> { Gestures.Pleased });
-            }
+            try { /* optional resume animation hook */ }
             catch { }
         }
     }

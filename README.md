@@ -13,6 +13,7 @@ A playful recreation of Microsoft Agent Rover — built with the help of GitHub 
 
 ---
 
+
 ## ✨ Features
 - Lightweight and fast startup
 - Animated digital pet (Rover)
@@ -22,11 +23,28 @@ A playful recreation of Microsoft Agent Rover — built with the help of GitHub 
 - Modular feature host (`FeatureHost`) for easy plug‑ins
 - Persisted user settings (feature toggles, idle timeout, audio, window position) in `appsettings.user.json`
 
+---
+
+## 🗂️ Solution Structure
+
+- `src/DigitalPetApp/` — Main application code
+	- `Features/` — Feature modules (animations, reminders, etc.)
+	- `Helpers/` — Utility classes and converters
+	- `Models/` — Data models
+	- `Services/` — Business logic and services
+	- `ViewModels/` — MVVM view models
+	- `Views/` — XAML UI files
+	- `Assets/` — Animation and sound assets (e.g., `Assets/rover/agent.json`)
+- `tests/DigitalPetApp.Tests/` — Unit tests
+
+---
+
 
 ## 🖼️ Screenshots
 <!-- Add screenshots here if available -->
 
-## 🚀 Getting Started
+
+## �️ Getting Started
 1. **Clone the repository:**
 	```
 	git clone https://github.com/rinoreji/digital-pet.git
@@ -37,13 +55,13 @@ A playful recreation of Microsoft Agent Rover — built with the help of GitHub 
 	- Using Visual Studio: Press `F5` or click `Build > Build Solution`.
 	- Using VS Code: Run the build task or use the terminal:
 	  ```
-	  dotnet build
+	  dotnet build src/DigitalPetApp/DigitalPetApp.csproj
 	  ```
 4. **Run the application:**
 	- Using Visual Studio: Press `F5` or click `Debug > Start Debugging`.
 	- Using VS Code or terminal:
 	  ```
-	  dotnet run
+	  dotnet run --project src/DigitalPetApp/DigitalPetApp.csproj
 	  ```
 
 ## 🕹️ Usage
@@ -54,7 +72,7 @@ A playful recreation of Microsoft Agent Rover — built with the help of GitHub 
 
 ## 🧩 Extending the App
 ### Animations
-Frames & timing are defined in `Assets/rover/agent.json`. Each gesture name maps to a sequence of frames (`x`,`y`,`duration`,`sound`). At runtime `AgentAnimationLoader` + `SpriteSheetAnimationService` handle playback. To add a new gesture:
+Frames & timing are defined in `src/DigitalPetApp/Assets/rover/agent.json`. Each gesture name maps to a sequence of frames (`x`,`y`,`duration`,`sound`). At runtime `AgentAnimationLoader` + `SpriteSheetAnimationService` handle playback. To add a new gesture:
 1. Add frames & optional `sound` keys to `agent.json` under a new animation name.
 2. Reference that gesture via a new enum value in `Gestures` (if not already present).
 3. Call `IAnimationService.PlaySequence(new[]{ Gestures.NewGesture })` from a feature/view model.

@@ -10,13 +10,16 @@ This project is a C# WPF desktop application for a digital pet. Focus on lightwe
 - Use async/await for asynchronous operations.
 - Keep methods short and focused on a single responsibility.
 
+
 ## Folder Structure
-- `/Views`: Contains all XAML UI files.
-- `/ViewModels`: Contains view model classes.
-- `/Models`: Contains data models.
-- `/Services`: Contains business logic and data access services.
-- `/Helpers`: Contains utility classes and converters.
-- `/Features`: Contains feature implementations like animations, sounds, and tricks.
+- `src/DigitalPetApp/Views`: Contains all XAML UI files.
+- `src/DigitalPetApp/ViewModels`: Contains view model classes.
+- `src/DigitalPetApp/Models`: Contains data models.
+- `src/DigitalPetApp/Services`: Contains business logic and data access services.
+- `src/DigitalPetApp/Helpers`: Contains utility classes and converters.
+- `src/DigitalPetApp/Features`: Contains feature implementations like animations, sounds, and tricks.
+- `src/DigitalPetApp/Assets`: Contains animation and sound assets.
+- `tests/DigitalPetApp.Tests`: Contains unit tests.
 
 ## Naming Conventions
 - Views: `CustomerView.xaml`

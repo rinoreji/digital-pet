@@ -31,6 +31,8 @@ namespace DigitalPetApp
     private readonly RoverSoundLoader soundLoader;
     private readonly PooledSoundPlayerService soundPlayer;
     private readonly TrayIconService trayIcon;
+    private Services.GlobalHotkeyService? hotkeyService;
+    private int hotkeyId;
 
         public MainWindow()
         {
@@ -101,6 +103,24 @@ namespace DigitalPetApp
             trayIcon = new TrayIconService(this, () => viewModel.OpenSettingsCommand.Execute(null));
             trayIcon.Show();
 
+            // Register global hotkey after window handle is ready
+            this.SourceInitialized += (_, __) =>
+            {
+                try
+                {
+                    hotkeyService = new Services.GlobalHotkeyService(this);
+                    hotkeyId = hotkeyService.Register(ModifierKeys.Control, Key.Space, ToggleVisibilityHotkey);
+                }
+                catch (Exception ex)
+                {
+                    try
+                    {
+                        Services.ServiceRegistry.Resolve<Services.ILoggingService>().Error("Global hotkey registration failed", ex);
+                    }
+                    catch { }
+                }
+            };
+
             // Play default animation on startup (UI only)
             viewModel.PlayStartupAnimation();
         }
@@ -111,6 +131,7 @@ namespace DigitalPetApp
             timerService.Dispose();
             activityMonitor?.Dispose();
             trayIcon.Dispose();
+            hotkeyService?.Dispose();
             // Persist changes only if dirty (already tracked)
             // Persist window position and audio settings (latest in case adjusted elsewhere)
             settingsService.Current.WindowLeft = this.Left;
@@ -140,6 +161,23 @@ namespace DigitalPetApp
             }
             // Otherwise treat as click (quick & small movement)
             if (viewModel.PetClickedCommand.CanExecute(null)) viewModel.PetClickedCommand.Execute(null);
+        }
+
+        private void ToggleVisibilityHotkey()
+        {
+            // Toggle overall window visibility
+            if (this.Visibility == Visibility.Visible && this.IsVisible)
+            {
+                this.Hide();
+            }
+            else
+            {
+                this.Show();
+                // Bring to foreground politely
+                this.Topmost = true; // force to front
+                this.Activate();
+                this.Topmost = Services.UISettings.WindowTopmost; // restore preference
+            }
         }
 
     }

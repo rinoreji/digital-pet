@@ -38,6 +38,11 @@ This project is a C# WPF desktop application for a digital pet. Focus on lightwe
 - Ask Copilot to help with XAML bindings and layout suggestions.
 - Use Copilot to refactor code for readability and performance.
 - Use Copilot to write unit tests for services and ViewModels.
+- After making changes build the app to make sure there are no errors. To build the app, use the following command in the terminal:
+```
+dotnet build
+```
+```
 
 ## Known Issues
 - Navigation between views is currently manual; consider implementing a navigation service if more windows/pages are added.

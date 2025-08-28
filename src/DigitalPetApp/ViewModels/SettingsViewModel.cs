@@ -8,6 +8,10 @@ namespace DigitalPetApp.ViewModels;
 
 public class SettingsViewModel : INotifyPropertyChanged
 {
+    public IEnumerable<string> AvailableModifiers { get; } = Enum.GetNames(typeof(System.Windows.Input.ModifierKeys)).Where(m => m != "None");
+    public IEnumerable<string> AvailableKeys { get; } =
+        new[] { "Space" }
+        .Concat(Enumerable.Range('A', 26).Select(i => ((char)i).ToString()));
     private readonly ISettingsService settingsService;
     private readonly IFeatureHost featureHost;
     private readonly ActivityMonitor activityMonitor;
@@ -23,12 +27,19 @@ public class SettingsViewModel : INotifyPropertyChanged
         enableReminder = settingsService.Current.EnableReminder;
         enableHourlyChime = settingsService.Current.EnableHourlyChime;
         enableIdleAnimation = settingsService.Current.EnableIdleAnimation;
-    enableRandomTrick = settingsService.Current.EnableRandomTrick;
-    volume = settingsService.Current.Volume;
-    muted = settingsService.Current.Muted;
-    SaveCommand = new RelayCommand(_ => Save());
-    CancelCommand = new RelayCommand(_ => CloseWindow());
+        enableRandomTrick = settingsService.Current.EnableRandomTrick;
+        volume = settingsService.Current.Volume;
+        muted = settingsService.Current.Muted;
+        hotkeyModifier = settingsService.Current.HotkeyModifier;
+        hotkeyKey = settingsService.Current.HotkeyKey;
+        SaveCommand = new RelayCommand(_ => Save());
+        CancelCommand = new RelayCommand(_ => CloseWindow());
     }
+    private string hotkeyModifier;
+    public string HotkeyModifier { get => hotkeyModifier; set { if (value != hotkeyModifier) { hotkeyModifier = value; OnPropertyChanged(); } } }
+
+    private string hotkeyKey;
+    public string HotkeyKey { get => hotkeyKey; set { if (value != hotkeyKey) { hotkeyKey = value; OnPropertyChanged(); } } }
 
     private int idleTimeoutSeconds;
     public int IdleTimeoutSeconds { get => idleTimeoutSeconds; set { if (value!=idleTimeoutSeconds){ idleTimeoutSeconds=value; OnPropertyChanged(); } } }
@@ -64,7 +75,9 @@ public class SettingsViewModel : INotifyPropertyChanged
     settingsService.Current.EnableRandomTrick = EnableRandomTrick;
     settingsService.Current.Volume = Volume;
     settingsService.Current.Muted = Muted;
-        settingsService.Save();
+    settingsService.Current.HotkeyModifier = HotkeyModifier;
+    settingsService.Current.HotkeyKey = HotkeyKey;
+    settingsService.Save();
         // Apply audio settings live if service available
         try
         {

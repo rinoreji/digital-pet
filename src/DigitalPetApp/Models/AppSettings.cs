@@ -15,4 +15,8 @@ public class AppSettings
     // Window position
     public double? WindowLeft { get; set; }
     public double? WindowTop { get; set; }
+
+    // Global hotkey
+    public string HotkeyModifier { get; set; } = "Control";
+    public string HotkeyKey { get; set; } = "Space";
 }

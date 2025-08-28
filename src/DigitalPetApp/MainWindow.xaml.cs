@@ -109,7 +109,15 @@ namespace DigitalPetApp
                 try
                 {
                     hotkeyService = new Services.GlobalHotkeyService(this);
-                    hotkeyId = hotkeyService.Register(ModifierKeys.Control, Key.Space, ToggleVisibilityHotkey);
+                    var modifier = settingsService.Current.HotkeyModifier ?? "Control";
+                    var key = settingsService.Current.HotkeyKey ?? "Space";
+                    ModifierKeys modEnum = ModifierKeys.Control;
+                    if (modifier == "Alt") modEnum = ModifierKeys.Alt;
+                    else if (modifier == "Shift") modEnum = ModifierKeys.Shift;
+                    else if (modifier == "Win") modEnum = ModifierKeys.Windows;
+                    Key keyEnum = Key.Space;
+                    if (Enum.TryParse<Key>(key, out var parsedKey)) keyEnum = parsedKey;
+                    hotkeyId = hotkeyService.Register(modEnum, keyEnum, ToggleVisibilityHotkey);
                 }
                 catch (Exception ex)
                 {
